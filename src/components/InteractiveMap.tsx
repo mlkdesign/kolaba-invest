@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { geoCentroid, geoMercator, geoPath } from 'd3-geo';
-import { feature } from 'topojson-client';
+import { feature, merge } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import type { Topology, GeometryCollection } from 'topojson-specification';
+import type { Topology, GeometryCollection, MultiPolygon as TopoMultiPolygon } from 'topojson-specification';
 import { MAP_EXCLUDED, MARKET_COUNTRIES, type RegionId } from '../data/market';
 import { Popover, type Anchor } from './Popover';
 import { useContent } from '../content';
@@ -21,11 +21,40 @@ REGION_ORDER.forEach((r) => MARKET_COUNTRIES[r].forEach((id) => regionOf.set(id,
 
 let cache: Promise<MapData> | null = null;
 
+type CountriesTopology = Topology<{ countries: GeometryCollection<{ name: string }> }>;
+
+const RUSSIA = '643';
+const UKRAINE = '804';
+
+/**
+ * Natural Earth draws Crimea as part of Russia. The map shows Ukraine's internationally
+ * recognised borders: the Crimea polygon moves from Russia into Ukraine, merged so no
+ * border line is drawn between them.
+ */
+function withCrimeaInUkraine(topo: CountriesTopology, fc: FeatureCollection<Geometry, { name: string }>) {
+  const geoms = topo.objects.countries.geometries;
+  const russia = geoms.find((g) => g.id === RUSSIA) as TopoMultiPolygon<{ name: string }> | undefined;
+  const ukraine = geoms.find((g) => g.id === UKRAINE);
+  if (russia?.type !== 'MultiPolygon' || (ukraine?.type !== 'Polygon' && ukraine?.type !== 'MultiPolygon')) return;
+  const isCrimea = (arcs: TopoMultiPolygon['arcs'][number]) => {
+    const [lon, lat] = geoCentroid(feature(topo, { type: 'Polygon', arcs }));
+    return lon > 32 && lon < 37 && lat > 44 && lat < 46.5;
+  };
+  const crimea = russia.arcs.filter(isCrimea);
+  if (!crimea.length) return;
+  const rest = russia.arcs.filter((a) => !crimea.includes(a));
+  for (const f of fc.features) {
+    if (f.id === RUSSIA) f.geometry = feature(topo, { ...russia, arcs: rest }).geometry;
+    if (f.id === UKRAINE) f.geometry = merge(topo, [ukraine, ...crimea.map((arcs) => ({ type: 'Polygon' as const, arcs }))]);
+  }
+}
+
 /** Natural Earth 1:50m via world-atlas (bundled locally, loaded on demand). */
 function loadMap(): Promise<MapData> {
   cache ??= import('world-atlas/countries-50m.json').then((mod) => {
-    const topo = (mod.default ?? mod) as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
+    const topo = (mod.default ?? mod) as unknown as CountriesTopology;
     const fc = feature(topo, topo.objects.countries) as FeatureCollection<Geometry, { name: string }>;
+    withCrimeaInUkraine(topo, fc);
     const projection = geoMercator()
       .fitExtent(
         [
@@ -161,8 +190,9 @@ export function InteractiveMap() {
 
   return (
     <div className="map-wrap" ref={wrap} data-keys-owned="">
-      {/* Phones: the map keeps a readable height and pans sideways (native scroll, no gesture conflicts). */}
-      <div className="map-scroll" data-native-scroll="">
+      {/* Phones: the map keeps a readable height and pans sideways (native scroll, no gesture conflicts).
+          In the deck nothing scrolls here, so the wheel keeps flipping slides. */}
+      <div className="map-scroll" data-native-scroll={flow ? '' : undefined}>
     <div className={`map ${active ? 'has-active' : ''} ${data ? 'is-loaded' : ''}`}>
       <svg className="map__svg" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={c.mapLabel}>
         {data && (
