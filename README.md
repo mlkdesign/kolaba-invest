@@ -12,6 +12,19 @@ npm test           # calculator, budget, wheel-gesture and form tests
 npm run build      # typecheck + production build into dist/
 ```
 
+## GitHub Pages
+
+This project is configured for GitHub Pages deployment.
+
+1. Push the repo to GitHub.
+2. In the GitHub repository settings, enable GitHub Pages and select "GitHub Actions" as the source.
+3. Ensure the branch is `kolaba-invest` (or update the workflow branch filter in `.github/workflows/deploy.yml` if you prefer another one).
+4. The workflow in `.github/workflows/deploy.yml` will build and publish the app automatically on each push.
+5. The site will be available at:
+   `https://<username>.github.io/kolaba-invest/`
+
+If you use a custom domain, update the Pages settings and keep the `base` value in `vite.config.ts` aligned with your hosting target.
+
 ## Stack
 
 Vite · React 18 · TypeScript · plain CSS with design tokens · GSAP (timelines, counters,

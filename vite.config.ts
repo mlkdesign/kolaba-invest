@@ -22,7 +22,10 @@ function designUnits(): Plugin {
   };
 }
 
+const repoName = 'kolaba-invest';
+
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? `/${repoName}/` : '/',
   plugins: [designUnits(), react()],
   build: {
     target: 'es2020',
