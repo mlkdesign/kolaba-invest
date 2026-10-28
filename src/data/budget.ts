@@ -50,3 +50,8 @@ export const MARKETING_TOTAL = sum(MARKETING_ALLOCATION.map((m) => m.amount));
 
 /** Share of the total in percent, rounded to one decimal for display. */
 export const shareOf = (amount: number, total: number) => Math.round((amount / total) * 1000) / 10;
+
+/** Planned monthly spend after launch (M5–M10): what revenue has to cover for KOLABA to pay for itself. */
+export const POST_LAUNCH_MONTHLY_COST =
+  sum(ROADMAP_PHASES.filter((p) => p.id !== 'development').map((p) => p.budget)) /
+  PLAN_DURATIONS.find((d) => d.id === 'operations')!.months;

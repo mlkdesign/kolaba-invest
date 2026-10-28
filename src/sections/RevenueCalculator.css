@@ -107,6 +107,16 @@
 .scenario-chart__marker.is-visible {
   opacity: 1;
 }
+.scenario-chart__marker--break-even {
+  border-top-color: rgba(255, 255, 255, 0.55);
+}
+.scenario-chart__marker--break-even .scenario-chart__marker-label {
+  left: 0;
+  right: auto;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 0;
+}
 .scenario-chart__marker-label {
   position: absolute;
   right: 0;
@@ -296,7 +306,7 @@
 }
 .calc__results {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: u(18);
   line-height: 1.4;
 }
@@ -308,6 +318,9 @@
 .calc__result-value {
   font-weight: 600;
   font-size: u(23);
+}
+.calc__result.is-positive .calc__result-value {
+  color: #2bd67b;
 }
 .calc__result-label {
   display: flex;

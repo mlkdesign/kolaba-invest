@@ -8,6 +8,7 @@ import {
   type ScenarioInputs,
 } from '../data/projections';
 import type { ScenarioResult } from '../lib/revenue';
+import { POST_LAUNCH_MONTHLY_COST } from '../data/budget';
 import { usd, int } from '../lib/format';
 import { AnimatedCounter } from './AnimatedCounter';
 import { CalculatorInput } from './CalculatorInput';
@@ -49,7 +50,15 @@ export function RevenueCalculator({ scenario, inputs, result, onPreset, onInput 
     () => [
       { key: 'proceeds', value: result.appStoreProceeds, prefix: '$', label: c.results.proceeds, help: c.results.proceedsHelp },
       { key: 'runRate', value: result.annualizedRunRate, prefix: '$', label: c.results.runRate, help: c.results.runRateHelp },
-      { key: 'subs', value: result.payingSubscribers, prefix: '', label: c.results.subscribers, help: null },
+      { key: 'subs', value: result.payingSubscribers, prefix: '', suffix: '', label: c.results.subscribers, help: null },
+      {
+        key: 'coverage',
+        value: Math.round(result.costCoverage * 100),
+        prefix: '',
+        suffix: '%',
+        label: c.results.coverage,
+        help: c.results.coverageHelp(usd(POST_LAUNCH_MONTHLY_COST)),
+      },
     ],
     [result, c],
   );
@@ -106,9 +115,12 @@ export function RevenueCalculator({ scenario, inputs, result, onPreset, onInput 
 
       <div className="calc__results">
         {results.map((r) => (
-          <div className="calc__result" key={r.key}>
+          <div
+            className={`calc__result ${r.key === 'coverage' && result.costCoverage >= 1 ? 'is-positive' : ''}`}
+            key={r.key}
+          >
             <span className="calc__result-value">
-              <AnimatedCounter value={r.value} prefix={r.prefix} delay={0.6} />
+              <AnimatedCounter value={r.value} prefix={r.prefix} suffix={'suffix' in r ? r.suffix : ''} delay={0.6} />
             </span>
             <span className="calc__result-label">
               {r.label}

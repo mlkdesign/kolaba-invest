@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useContent } from '../content';
 import { PRESETS, PRESET_ORDER, type ScenarioId } from '../data/projections';
-import { calculateScenario } from '../lib/revenue';
+import { BREAK_EVEN_MRR, calculateScenario } from '../lib/revenue';
 import { int, usd } from '../lib/format';
 import { useRevealTrigger } from '../hooks/useRevealTrigger';
 import { AnimatedCounter } from './AnimatedCounter';
@@ -31,7 +31,7 @@ export function ScenarioChart({ scenario, customMrr }: Props) {
   }, [active]);
 
   const isCustom = scenario === 'custom';
-  const max = Math.max(...Object.values(PRESET_MRR), isCustom ? customMrr : 0, 1);
+  const max = Math.max(...Object.values(PRESET_MRR), BREAK_EVEN_MRR, isCustom ? customMrr : 0, 1);
   const g = grown ? 1 : 0;
 
   return (
@@ -56,6 +56,13 @@ export function ScenarioChart({ scenario, customMrr }: Props) {
             </div>
           );
         })}
+        {/* Break-even: proceeds cover the planned monthly spend after launch. */}
+        <div
+          className="scenario-chart__marker scenario-chart__marker--break-even is-visible"
+          style={{ '--h': (BREAK_EVEN_MRR / max) * g } as React.CSSProperties}
+        >
+          <span className="scenario-chart__marker-label">{c.breakEven(usd(BREAK_EVEN_MRR))}</span>
+        </div>
         <div
           className={`scenario-chart__marker ${isCustom ? 'is-visible' : ''}`}
           style={{ '--h': (customMrr / max) * g } as React.CSSProperties}

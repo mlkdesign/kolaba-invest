@@ -1,4 +1,5 @@
 import { PRICING } from '../data/pricing';
+import { POST_LAUNCH_MONTHLY_COST } from '../data/budget';
 import { INPUT_LIMITS, type InputKey, type ScenarioInputs } from '../data/projections';
 
 export type ScenarioResult = {
@@ -9,7 +10,12 @@ export type ScenarioResult = {
   appStoreProceeds: number;
   annualizedRunRate: number;
   payingSubscribers: number;
+  /** App Store proceeds ÷ planned monthly spend after launch (1 = the company pays for itself). */
+  costCoverage: number;
 };
+
+/** Gross MRR at which proceeds after the platform fee cover the planned post-launch spend. */
+export const BREAK_EVEN_MRR = POST_LAUNCH_MONTHLY_COST / (1 - PRICING.platformFeeRate);
 
 const finite = (n: number) => (Number.isFinite(n) ? n : 0);
 
@@ -44,13 +50,16 @@ export function calculateScenario(raw: ScenarioInputs): ScenarioResult {
 
   const grossMrr = finite(paidCreators * creatorMonthlyEquivalent + paidBusinesses * businessPro.monthly);
 
+  const proceeds = Math.max(0, finite(grossMrr * (1 - platformFeeRate)));
+
   return {
     paidCreators,
     paidBusinesses,
     creatorMonthlyEquivalent,
     grossMrr: Math.max(0, grossMrr),
-    appStoreProceeds: Math.max(0, finite(grossMrr * (1 - platformFeeRate))),
+    appStoreProceeds: proceeds,
     annualizedRunRate: Math.max(0, finite(grossMrr * 12)),
     payingSubscribers: paidCreators + paidBusinesses,
+    costCoverage: proceeds / POST_LAUNCH_MONTHLY_COST,
   };
 }

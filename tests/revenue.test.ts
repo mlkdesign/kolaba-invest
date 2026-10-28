@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { calculateScenario, clampInput } from '../src/lib/revenue';
+import { BREAK_EVEN_MRR, calculateScenario, clampInput } from '../src/lib/revenue';
+import { POST_LAUNCH_MONTHLY_COST, TOTAL_ROUND } from '../src/data/budget';
 import { PRESETS } from '../src/data/projections';
 import { usd } from '../src/lib/format';
 
@@ -23,6 +24,16 @@ describe('revenue model', () => {
     expect(usd(up.appStoreProceeds)).toBe('$7,392');
     expect(usd(up.annualizedRunRate)).toBe('$104,352');
     expect(up.payingSubscribers).toBe(1002);
+  });
+
+  it('derives break-even from the post-launch budget', () => {
+    // M5–M10 spend: 13,040 + 14,250 + 15,570 = 42,860 over 6 months.
+    expect(POST_LAUNCH_MONTHLY_COST).toBeCloseTo(7143.33, 2);
+    expect(usd(BREAK_EVEN_MRR)).toBe('$8,404');
+    expect(calculateScenario(PRESETS.upside).costCoverage).toBeCloseTo(1.035, 3);
+    expect(calculateScenario(PRESETS.base).costCoverage).toBeCloseTo(0.364, 3);
+    // The upside annual run rate exceeds the whole round.
+    expect(calculateScenario(PRESETS.upside).annualizedRunRate).toBeGreaterThan(TOTAL_ROUND);
   });
 
   it('returns zeros when there are no users', () => {

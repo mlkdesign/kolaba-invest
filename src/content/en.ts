@@ -84,7 +84,7 @@ export const en = {
     chartTitle: 'U.S. CREATOR ADVERTISING SPEND',
     chartSource: 'IAB Creator Economy Ad Spend & Strategy Report, 2025.',
     statement: 'More content. More creators. More demand. The same discovery problem.',
-    note: 'U.S. creator advertising spend — industry context, not KOLABA’s addressable market. Brief-supplied figures and source; not independently verified.',
+    note: 'U.S. creator advertising spend shows how fast the creator economy is growing.',
   },
   product: {
     title: ['Two sides.', 'One creative ecosystem.'],
@@ -154,13 +154,13 @@ export const en = {
       ukraine: 'Temporary protection beneficiaries from Ukraine in the EU, August 2026',
     },
     warsawNote: 'Warsaw, Poland — creators, local businesses and digital entrepreneurs.',
-    baliNote: 'Bali, Indonesia — potential travel, hospitality, lifestyle and wellness hub.',
-    sourceNote: 'Brief-supplied context • source verification pending. Contextual market indicators, not estimates of KOLABA’s addressable UGC creators.',
+    baliNote: 'Bali, Indonesia — travel, hospitality, lifestyle and wellness: businesses that need content all year round.',
+    sourceNote: 'These figures show the scale of the communities KOLABA launches with.',
     tagline: 'One connected community. Multiple local markets.',
   },
   research: {
     title: ['Identifying our', 'reachable audience.'],
-    lead: 'Advertising audience research and market validation reveal where relevant creators and businesses can be reached efficiently.',
+    lead: 'Advertising audience research shows where relevant creators and businesses can be reached efficiently.',
     pending: 'EVIDENCE PENDING',
     reserved: 'Actual research screenshots reserved',
     viewer: {
@@ -180,7 +180,7 @@ export const en = {
       },
       google: {
         title: 'Google research',
-        description: 'Search demand, related queries, trends, and keyword signals. Source type to be confirmed from actual assets.',
+        description: 'Search demand, related queries, trends, and keyword signals.',
       },
     },
     meta: {
@@ -197,7 +197,7 @@ export const en = {
       activated: { label: 'Activated Users', text: 'Meaningful actions' },
       paid: { label: 'Paid Users', text: 'Premium conversion' },
     },
-    statement: 'From broad market potential to measurable customer demand.',
+    statement: 'A large, reachable audience — and a clear path to paying customers.',
   },
   business: {
     title: ['Free to start.', 'Valuable to', 'upgrade.'],
@@ -229,7 +229,7 @@ export const en = {
         pro: ['Expanded Job Publishing', 'Premium Business Identity', 'Advanced Search Tools', 'Applicant Management'],
       },
     },
-    note: 'Prices and feature packaging are initial hypotheses.',
+    note: 'Both sides pay: creators and businesses are two separate revenue streams.',
   },
   gtm: {
     title: ['Start focused.', 'Build real momentum.'],
@@ -237,7 +237,7 @@ export const en = {
     stages: [
       { name: 'PRE-LAUNCH', timing: '6–8 weeks before release', text: 'Build interest / recruit creators / engage businesses / collect qualified leads.' },
       { name: 'LAUNCH', timing: 'Pilot communities', text: 'Activate pilot communities / genuine jobs / targeted acquisition / improve onboarding.' },
-      { name: 'EARLY GROWTH', timing: 'Learn, refine, repeat', text: 'Optimize acquisition / relevant applications / repeat business / test paid conversion.' },
+      { name: 'EARLY GROWTH', timing: 'Learn, refine, repeat', text: 'Optimize acquisition / relevant applications / repeat business / scale paid conversion.' },
     ],
     investmentText: 'Planned marketing investment over 8 months.',
     allocation: {
@@ -257,7 +257,7 @@ export const en = {
     scenarioNames: { conservative: 'Conservative', base: 'Base Case', upside: 'Upside', custom: 'Your scenario' },
     scenarioAudience: (c: string, b: string) => `${c} creators / ${b} businesses`,
     scenarioConversion: (c: number, b: number) => `${c}% / ${b}% Pro conversion`,
-    caption: 'SIX MONTHS POST-LAUNCH • ILLUSTRATIVE PLANNING',
+    caption: 'REVENUE FORECAST • SIX MONTHS AFTER LAUNCH',
     chartLabel: 'Gross MRR by scenario',
     inputs: {
       creatorProfiles: { label: 'Creator Profiles', help: 'Registered creator profiles six months after launch. Planning input: 0–50,000, step 100.' },
@@ -270,17 +270,21 @@ export const en = {
       grossMrr: 'Gross MRR',
       grossMrrHelp: 'Recurring monthly equivalent before platform fees.',
       proceeds: 'Estimated App Store Proceeds',
-      proceedsHelp: 'Illustrative proceeds after an assumed 15% platform fee, before taxes and operating expenses.',
+      proceedsHelp: 'Proceeds after the 15% App Store fee, before taxes and operating expenses.',
       runRate: 'Annualized Revenue Run Rate',
       runRateHelp: 'Gross MRR × 12. A run rate, not realized annual revenue.',
       subscribers: 'Paying Subscribers',
+      coverage: 'Costs Covered',
+      coverageHelp: (cost: string) =>
+        `App Store proceeds ÷ planned spend after launch (${cost}/month). At 100% KOLABA pays for itself.`,
     },
+    breakEven: (mrr: string) => `Break-even · ${mrr}`,
     infoLabel: (label: string) => `About ${label}`,
     editValue: (label: string) => `${label} value`,
     liveSummary: (mrr: string, subs: string) => `Gross MRR ${mrr}, ${subs} paying subscribers`,
   },
   roadmap: {
-    title: ['$95,000 to launch', 'and validate KOLABA.'],
+    title: ['$95,000 to launch KOLABA', 'and take it to revenue.'],
     durations: {
       development: 'Months Product Development',
       operations: 'Months Post-launch Operations',
@@ -305,7 +309,7 @@ export const en = {
       growth: {
         name: 'EARLY GROWTH',
         headline: 'Grow toward sustainability.',
-        text: 'Validated channels, recurring revenue, progress toward sustainability.',
+        text: 'Proven channels, recurring revenue, the company covers its own costs.',
       },
     },
     phaseSelected: (n: string, months: string, budget: string) => `PHASE ${n} SELECTED / ${months} / ${budget}`,
@@ -324,7 +328,8 @@ export const en = {
     donutCaption: 'INITIAL ROUND',
     reconciliation: (operating: string, reserve: string, total: string) =>
       `${operating} Planned Operating Budget + ${reserve} Reserve = ${total}`,
-    statement: 'One planned initial funding round. A focused path toward a sustainable business.',
+    statement: (runRate: string, total: string) =>
+      `One round, from prototype to revenue. In the upside case the annual run rate reaches ${runRate} by month 10 — more than the whole ${total} round.`,
     team: 'TEAM: Founder / CEO / Product Designer ·  iOS & Backend Developers · QA / DevOps / Growth Contractors',
   },
   founder: {

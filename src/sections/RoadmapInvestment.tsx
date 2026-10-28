@@ -18,6 +18,10 @@ import {
   type InvestmentCategory,
 } from '../data/budget';
 import { formatNumber, usd } from '../lib/format';
+import { calculateScenario } from '../lib/revenue';
+import { PRESETS } from '../data/projections';
+
+const UPSIDE_RUN_RATE = calculateScenario(PRESETS.upside).annualizedRunRate;
 import { isFlowLayout, reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
 import { useEngine } from '../engine/SlideEngine';
 import './RoadmapInvestment.css';
@@ -271,7 +275,7 @@ function Content() {
             ))}
           </ul>
           <p className="roadmap__recon">{c.reconciliation(usd(OPERATING_BUDGET), usd(CONTINGENCY_RESERVE), usd(TOTAL_ROUND))}</p>
-          <p className="roadmap__statement">{c.statement}</p>
+          <p className="roadmap__statement">{c.statement(usd(UPSIDE_RUN_RATE), usd(TOTAL_ROUND))}</p>
         </div>
       </div>
 
