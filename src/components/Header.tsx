@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { NAV_TARGETS, SLIDES, SLIDE_COUNT, slideIndex, type SlideId } from '../data/slides';
+import { NAV_TARGETS, SLIDES, SLIDE_COUNT, slideIndex } from '../data/slides';
 import { useContent, useLocale, useSetLocale, AVAILABLE_LOCALES } from '../content';
 import { useEngine } from '../engine/SlideEngine';
 import { lockScroll, unlockScroll } from '../lib/scrollLock';
@@ -79,16 +79,7 @@ export function Header() {
 
         <div className="site-header__actions">
           {langSwitch}
-          <a
-            href="#demo"
-            className="site-header__demo"
-            onClick={(e) => {
-              e.preventDefault();
-              go(slideIndex('demo'));
-            }}
-          >
-            {c.header.exploreDemo}
-          </a>
+          {/* "Explore KOLABA" (link to the public Product Overview) goes here once that page exists. */}
           <a
             href="#founder"
             className="btn btn--outline btn--sm site-header__contact"
@@ -142,16 +133,6 @@ export function Header() {
   );
 }
 
-const MENU_ITEMS: { slide: SlideId; label: 'product' | 'demo' | 'businessModel' | 'financials' | 'market' | 'roadmap' | 'founder' }[] = [
-  { slide: 'product', label: 'product' },
-  { slide: 'demo', label: 'demo' },
-  { slide: 'business', label: 'businessModel' },
-  { slide: 'calculator', label: 'financials' },
-  { slide: 'markets', label: 'market' },
-  { slide: 'roadmap', label: 'roadmap' },
-  { slide: 'founder', label: 'founder' },
-];
-
 type MenuProps = {
   open: boolean;
   activeIndex: number;
@@ -198,16 +179,6 @@ function MobileMenu({ open, activeIndex, returnFocus, langSwitch, onClose, onNav
     };
   }, [open, onClose, returnFocus]);
 
-  const labels = {
-    product: c.nav.product,
-    demo: c.demoNav,
-    businessModel: c.nav.businessModel,
-    financials: c.financials,
-    market: c.nav.market,
-    roadmap: c.nav.roadmap,
-    founder: c.nav.founder,
-  };
-
   return (
     <div
       ref={panel}
@@ -222,7 +193,7 @@ function MobileMenu({ open, activeIndex, returnFocus, langSwitch, onClose, onNav
       <div className="mobile-menu__glow" aria-hidden="true" />
       <nav aria-label="Sections">
         <ol className="mobile-menu__list">
-          {MENU_ITEMS.map((item, i) => {
+          {NAV_TARGETS.map((item, i) => {
             const index = slideIndex(item.slide);
             const current = index === activeIndex;
             return (
@@ -237,14 +208,14 @@ function MobileMenu({ open, activeIndex, returnFocus, langSwitch, onClose, onNav
                   }}
                 >
                   <span className="mobile-menu__num">{pad(index)}</span>
-                  {labels[item.label]}
+                  {c.nav[item.group]}
                 </a>
               </li>
             );
           })}
         </ol>
       </nav>
-      <div className="mobile-menu__footer" style={{ '--i': MENU_ITEMS.length } as React.CSSProperties}>
+      <div className="mobile-menu__footer" style={{ '--i': NAV_TARGETS.length } as React.CSSProperties}>
         <a
           href="#contact-title"
           className="btn btn--primary mobile-menu__cta"

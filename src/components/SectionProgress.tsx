@@ -4,7 +4,7 @@ import { useEngine } from '../engine/SlideEngine';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** "01 / 12 ——— NEXT: … ↑ ↓" — doubles as the previous/next slide control. */
+/** "01 / 07 ——— NEXT: … ↑ ↓" — doubles as the previous/next slide control. */
 export function SectionProgress({ index }: { index: number }) {
   const c = useContent();
   const { goTo } = useEngine();

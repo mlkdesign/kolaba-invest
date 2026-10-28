@@ -1,7 +1,40 @@
 # KOLABA — Investor Presentation
 
-A private, 12-slide interactive investor presentation built from the Figma file
-`kolaba.` (frames `810:31293` … `810:32535`, handoff board `810:32639`).
+A private, 7-section Investor Proposal built from the Figma file `kolaba.`
+(frames `810:31293` … `810:32535`, handoff board `810:32639`).
+
+| # | Section | Component |
+| --- | --- | --- |
+| 01 | Investment Opportunity | `src/sections/Hero.tsx` |
+| 02 | The Opportunity (problem, solution, advantages, industry context) | `src/sections/Opportunity.tsx` |
+| 03 | Market & Validation (map, Meta / Google research, funnel) | `src/sections/MarketValidation.tsx` |
+| 04 | Business Model & Growth | `src/sections/BusinessGrowth.tsx` |
+| 05 | Financial Projections (calculator) | `src/sections/FinancialProjections.tsx` |
+| 06 | Investment & Roadmap | `src/sections/RoadmapInvestment.tsx` |
+| 07 | Founder & Contact | `src/sections/FounderContact.tsx` |
+
+The full 12-slide deck is tagged `v1-12-slides` in Git.
+
+## Pages and routes
+
+`src/pages/routes.ts` resolves the page; `src/pages/InvestorProposal.tsx` assembles the deck.
+The Investor Proposal is served at the site root **and** at `/investors`, so links that were
+already sent keep working. Anchors from the old deck (`#calculator`, `#roadmap`, `#markets`, …)
+open the matching new section (`LEGACY_ANCHORS` in `src/data/slides.ts`).
+
+Each page sets its own title, description and robots (`PAGE_META`), so the investor page's
+`noindex` never applies to the future public page. When the **Product Overview** ships:
+point `/` at it, keep `/investors`, give the public page its own HTML entry without the
+`noindex` meta, and redirect root links that carry an investor anchor to `/investors#…`.
+Add the "Explore KOLABA" header/footer link only then (placeholder comment in `Header.tsx`).
+
+### Kept for Product Overview
+
+Not rendered in the Investor Proposal, kept intact for reuse: `ProblemOpportunity`,
+`ProductEcosystem`, `InteractiveDemo` (+ `DemoPhoneContainer`, `DemoExplanationSlider`),
+`CompetitiveAdvantage`, `TargetMarkets`, `AudienceResearch` (+ `Research`), `BusinessModel`
+(+ full `PricingCard`), `GoToMarket`. Their copy stays in `content/*.ts`; their themes are in
+`PRODUCT_SECTIONS` (`src/data/slides.ts`).
 
 ## Run
 
@@ -64,7 +97,7 @@ arrows and `#hash` deep links are supported. Tabbing into another slide brings i
 | Calculator presets/limits | `src/data/projections.ts`, formulas in `src/lib/revenue.ts` |
 | Roadmap, $95K allocation, GTM budget | `src/data/budget.ts` |
 | Market data, map countries, cities | `src/data/market.ts` |
-| Research screenshots (slide 07) | `src/data/research.ts` — add `{ src, alt }` items, no JSX edits |
+| Research screenshots (section 03) | `src/data/research.ts` — add `{ src, alt }` items, no JSX edits |
 | Founder links, legal routes, form endpoint | `src/data/contacts.ts` |
 | All copy | `src/content/en.ts`, `src/content/ru.ts` |
 
@@ -73,10 +106,10 @@ arrows and `#hash` deep links are supported. Tabbing into another slide brings i
 EN and RU share the `Content` shape (`ru.ts` is type-checked against `en.ts`). The header
 switch stores the choice in `localStorage`; `?lang=ru` opens the Russian version directly.
 Slide eyebrows ("05 / …") and "NEXT:" labels come from `slideTitles` and are numbered by
-position, so reordering `SLIDES` in `src/data/slides.ts` (and the sections in `App.tsx`)
-needs no copy changes.
+position, so reordering `SLIDES` in `src/data/slides.ts` (and the sections in
+`src/pages/InvestorProposal.tsx`) needs no copy changes.
 
-### Live prototype (slide 04)
+### Live prototype (Product Overview)
 
 `DemoPhoneContainer` accepts an `embed` prop that is placed exactly over the iPhone
 screen (`data-slot="PROTOTYPE_EMBED"`). Pass an `<iframe>` there; wheel/keys inside the
@@ -106,6 +139,6 @@ at an equivalent function.
 ## Pricing discrepancy (resolved in config)
 
 The Figma frame shows Business Pro at $5.99/month. Per the agreed financial model the site
-uses **$4.99/month** everywhere (slide 08 and the calculator). The Figma annual Business Pro
-price ($3.99/month, $47.88/year) is kept in `PRICING.businessPro.annual` with
-`status: 'pending-approval'`; it is displayed on slide 08 but not used in projections.
+uses **$4.99/month** everywhere (the Business Model cards and the calculator). The Figma annual
+Business Pro price ($3.99/month, $47.88/year) is kept in `PRICING.businessPro.annual` with
+`status: 'pending-approval'`; it is not shown in the Investor Proposal and not used in projections.

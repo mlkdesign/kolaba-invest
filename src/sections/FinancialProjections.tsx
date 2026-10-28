@@ -33,6 +33,7 @@ function Content() {
     tl.from(q('.calc'), { autoAlpha: 0, y: 40, duration: 0.85 }, 0.2);
     reveal(tl, q('.calc__tabs, .calc__caption, .calc-input, .calc__mrr, .calc__result'), 0.35, { stagger: 0.05, y: 16 });
     reveal(tl, q('.scenario-bar__meta'), 0.5, { stagger: 0.1 });
+    reveal(tl, q('.calc-section__disclaimer'), 0.9);
   });
 
   return (
@@ -49,7 +50,14 @@ function Content() {
             </h2>
             <p className="calc-section__lead">{c.lead}</p>
           </header>
-          <ScenarioChart scenario={scenario} customMrr={result.grossMrr} />
+          <div className="calc-section__chart">
+            <ScenarioChart scenario={scenario} customMrr={result.grossMrr} />
+            <p className="calc-section__disclaimer">
+              {c.disclaimer.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </p>
+          </div>
         </div>
         <RevenueCalculator scenario={scenario} inputs={inputs} result={result} onPreset={onPreset} onInput={onInput} />
       </div>
@@ -57,9 +65,9 @@ function Content() {
   );
 }
 
-export function RevenueCalculatorSection() {
+export function FinancialProjections() {
   return (
-    <Slide id="calculator">
+    <Slide id="financials">
       <Content />
     </Slide>
   );

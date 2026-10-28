@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { SLIDES, SLIDE_COUNT, type SlideId } from '../data/slides';
+import { PRODUCT_SECTIONS, SLIDES, SLIDE_COUNT, type ProductSectionId, type SlideId } from '../data/slides';
 import { useEngine } from '../engine/SlideEngine';
 import { SectionContext } from '../engine/SectionContext';
 import { useContent } from '../content';
 import { SectionProgress } from './SectionProgress';
 
 type Props = {
-  id: SlideId;
+  /** Investor Proposal slide, or a section kept for the future Product Overview page. */
+  id: SlideId | ProductSectionId;
   className?: string;
   /** Full-bleed decorative layers rendered behind the content. */
   background?: ReactNode;
@@ -18,7 +19,7 @@ export function Slide({ id, className = '', background, showProgress = true, chi
   const { registerSection, mode, activeIndex, visible } = useEngine();
   const c = useContent();
   const index = SLIDES.findIndex((s) => s.id === id);
-  const theme = SLIDES[index].theme;
+  const theme = index >= 0 ? SLIDES[index].theme : PRODUCT_SECTIONS[id as ProductSectionId].theme;
   const ref = useRef<HTMLElement>(null);
 
   const active = mode === 'deck' ? activeIndex === index : visible.has(index);

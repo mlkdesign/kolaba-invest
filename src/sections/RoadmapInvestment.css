@@ -11,24 +11,35 @@
   flex-direction: column;
 }
 
-.roadmap__durations {
+.roadmap__summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: u(30);
-  margin-top: u(48);
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  column-gap: u(44);
+  margin-top: u(40);
   line-height: 1.4;
 }
-.duration {
+.summary__item {
   display: flex;
-  align-items: center;
-  gap: u(12);
+  flex-direction: column;
+  gap: u(2);
 }
-.duration__value {
-  font-weight: 500;
-  font-size: u(35);
+.summary__value {
+  font-weight: 600;
+  font-size: u(32);
+  line-height: 1.2;
 }
-.duration__label {
+.summary__item--total .summary__value {
+  color: var(--c-pink);
+}
+.summary__label {
+  color: var(--muted-light);
   font-size: t(13);
+}
+.roadmap__period {
+  margin-top: u(10);
+  font-size: t(13);
+  line-height: 1.4;
 }
 
 .timeline {
@@ -214,20 +225,15 @@
 .legend__share {
   font-size: t(11);
 }
-.roadmap__recon {
-  margin-top: u(31);
-  font-weight: 600;
-  font-size: t(14);
-  line-height: 1.4;
-}
-.roadmap__statement {
+.roadmap__terms {
   margin-top: auto;
-  padding-top: u(16);
+  padding-top: u(14);
+  border-top: 1px solid var(--line-light);
   font-weight: 600;
   font-size: t(13);
   line-height: 1.4;
 }
-#roadmap .progress {
+#investment .progress {
   margin-top: u(55);
 }
 
@@ -344,10 +350,23 @@ html.is-flow .roadmap {
   row-gap: 48px;
   margin-top: 0;
 }
-html.is-flow .roadmap__durations {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+html.is-flow .roadmap__summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
   margin-top: 32px;
+}
+html.is-flow .summary__item--total {
+  grid-column: 1 / -1;
+}
+html.is-flow .summary__value {
+  font-size: clamp(24px, 7vw, 30px);
+}
+html.is-flow .summary__item--total .summary__value {
+  font-size: clamp(36px, 11vw, 48px);
+}
+html.is-flow .summary__label,
+html.is-flow .roadmap__period {
+  font-size: 14px;
 }
 html.is-flow .timeline {
   margin-top: 28px;
@@ -505,6 +524,7 @@ html.is-flow .legend__name {
   flex: 1;
   width: auto;
 }
-html.is-flow .roadmap__statement {
-  margin-top: 16px;
+html.is-flow .roadmap__terms {
+  margin-top: 24px;
+  font-size: 15px;
 }

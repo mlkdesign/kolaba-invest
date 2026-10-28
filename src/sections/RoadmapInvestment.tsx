@@ -11,17 +11,12 @@ import {
   CONTINGENCY_RESERVE,
   INVESTMENT_CATEGORIES,
   OPERATING_BUDGET,
-  PLAN_DURATIONS,
   ROADMAP_PHASES,
   TOTAL_ROUND,
   shareOf,
   type InvestmentCategory,
 } from '../data/budget';
 import { formatNumber, usd } from '../lib/format';
-import { calculateScenario } from '../lib/revenue';
-import { PRESETS } from '../data/projections';
-
-const UPSIDE_RUN_RATE = calculateScenario(PRESETS.upside).annualizedRunRate;
 import { isFlowLayout, reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
 import { useEngine } from '../engine/SlideEngine';
 import './RoadmapInvestment.css';
@@ -80,7 +75,8 @@ function Content() {
 
   useSectionTimeline((tl, q) => {
     reveal(tl, q('.roadmap__intro > *'), 0);
-    reveal(tl, q('.duration'), 0.2, { stagger: 0.1 });
+    reveal(tl, q('.summary__item'), 0.2, { stagger: 0.1 });
+    reveal(tl, q('.roadmap__period'), 0.45);
     if (!isFlowLayout()) tl.from(q('.timeline__line'), { scaleY: 0, duration: 1.3, ease: 'power2.inOut' }, 0.35);
     q('.phase').forEach((row, i) => {
       const t = 0.45 + i * 0.28;
@@ -89,7 +85,7 @@ function Content() {
     });
     tl.from(q('.donut'), { autoAlpha: 0, scale: 0.96, duration: 0.8 }, 0.2);
     reveal(tl, q('.legend__row'), 1.05, { stagger: 0.09, y: 12 });
-    reveal(tl, q('.roadmap__recon, .roadmap__statement, .roadmap__team'), 1.35);
+    reveal(tl, q('.roadmap__terms, .roadmap__team'), 1.35);
   });
 
   // Popup anchor: a point just outside the ring at the segment's mid-angle.
@@ -167,16 +163,23 @@ function Content() {
             </h2>
           </header>
 
-          <ul className="roadmap__durations">
-            {PLAN_DURATIONS.map((d) => (
-              <li className="duration" key={d.id}>
-                <span className="duration__value">
-                  <AnimatedCounter value={d.months} delay={0.3} duration={0.9} />
+          <ul className="roadmap__summary">
+            {(
+              [
+                ['total', TOTAL_ROUND],
+                ['operating', OPERATING_BUDGET],
+                ['reserve', CONTINGENCY_RESERVE],
+              ] as const
+            ).map(([id, amount], i) => (
+              <li className={`summary__item summary__item--${id}`} key={id}>
+                <span className="summary__value">
+                  <AnimatedCounter value={amount} prefix="$" delay={0.3 + i * 0.1} duration={1} />
                 </span>
-                <span className="duration__label">{c.durations[d.id]}</span>
+                <span className="summary__label">{c.summary[id]}</span>
               </li>
             ))}
           </ul>
+          <p className="roadmap__period">{c.period}</p>
 
           <ol className="timeline" ref={timelineRef}>
             <span className="timeline__line" aria-hidden="true" />
@@ -274,8 +277,7 @@ function Content() {
               </li>
             ))}
           </ul>
-          <p className="roadmap__recon">{c.reconciliation(usd(OPERATING_BUDGET), usd(CONTINGENCY_RESERVE), usd(TOTAL_ROUND))}</p>
-          <p className="roadmap__statement">{c.statement(usd(UPSIDE_RUN_RATE), usd(TOTAL_ROUND))}</p>
+          <p className="roadmap__terms">{c.terms}</p>
         </div>
       </div>
 
@@ -348,7 +350,7 @@ function Content() {
 
 export function RoadmapInvestment() {
   return (
-    <Slide id="roadmap">
+    <Slide id="investment">
       <Content />
     </Slide>
   );

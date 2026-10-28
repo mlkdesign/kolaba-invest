@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) u(528);
   column-gap: u(36);
-  margin-top: u(196);
+  margin-top: u(140);
 }
 .founder__intro {
   width: u(700);
@@ -53,8 +53,23 @@
   font-size: t(14);
 }
 .founder__tags {
-  color: var(--muted-dark);
-  font-size: t(12);
+  display: flex;
+  flex-wrap: wrap;
+  gap: u(6);
+  margin-top: u(4);
+}
+.founder__tags li {
+  padding: u(3) u(10);
+  border: 1px solid var(--line-dark-strong);
+  border-radius: var(--radius-pill);
+  color: var(--c-soft);
+  font-size: t(11);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+html.is-flow .founder__tags li {
+  font-size: 13px;
+  padding: 4px 12px;
 }
 
 .contact {

@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import gsap from 'gsap';
-import { SLIDES, SLIDE_COUNT } from '../data/slides';
+import { SLIDES, SLIDE_COUNT, slideIndexForHash } from '../data/slides';
 import { DECK_QUERY, useMediaQuery } from '../hooks/useMediaQuery';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { WheelIntent, normalizeWheel } from './wheelIntent';
@@ -69,8 +69,7 @@ function canScrollNatively(target: EventTarget | null, deltaY: number, boundary:
 }
 
 function initialIndexFromHash() {
-  const id = window.location.hash.replace('#', '');
-  const i = SLIDES.findIndex((s) => s.id === id);
+  const i = slideIndexForHash(window.location.hash);
   return i >= 0 ? i : 0;
 }
 
@@ -215,14 +214,18 @@ export function SlideEngine({ children }: { children: ReactNode }) {
   useEffect(() => {
     const id = SLIDES[activeIndex]?.id;
     if (id && window.location.hash !== `#${id}`) {
-      history.replaceState(null, '', activeIndex === 0 ? window.location.pathname + window.location.search : `#${id}`);
+      history.replaceState(
+        null,
+        '',
+        window.location.pathname + window.location.search + (activeIndex === 0 ? '' : `#${id}`),
+      );
     }
   }, [activeIndex]);
 
-  // Deep links (#calculator etc.) work after load too.
+  // Deep links (#financials, or a legacy #calculator) work after load too.
   useEffect(() => {
     const onHash = () => {
-      const i = SLIDES.findIndex((s) => `#${s.id}` === window.location.hash);
+      const i = slideIndexForHash(window.location.hash);
       if (i >= 0 && i !== activeRef.current) goTo(i);
     };
     window.addEventListener('hashchange', onHash);

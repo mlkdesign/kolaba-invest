@@ -3,7 +3,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   column-gap: u(36);
   align-items: stretch;
-  margin-top: u(107);
+  margin-top: u(72);
 }
 .calc-section__left {
   display: flex;
@@ -14,6 +14,29 @@
 .calc-section__intro {
   width: u(610);
   max-width: 100%;
+}
+.calc-section__chart {
+  display: flex;
+  flex-direction: column;
+  gap: u(18);
+}
+.calc-section__disclaimer {
+  display: flex;
+  flex-direction: column;
+  gap: u(2);
+  width: u(576);
+  max-width: 100%;
+  padding-top: u(12);
+  border-top: 1px solid var(--line-dark);
+  color: var(--muted-dark);
+  font-size: t(11);
+  line-height: 1.45;
+}
+html.is-flow .calc-section__chart {
+  order: 2;
+}
+html.is-flow .calc-section__disclaimer {
+  font-size: 12px;
 }
 .calc-section__lead {
   width: u(555);

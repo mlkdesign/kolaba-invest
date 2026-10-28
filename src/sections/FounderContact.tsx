@@ -47,7 +47,11 @@ function Content() {
                   {p}
                 </p>
               ))}
-              <p className="founder__tags">{f.tags}</p>
+              <ul className="founder__tags">
+                {f.indicators.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -62,10 +66,10 @@ function Content() {
       </div>
 
       <footer className="site-footer">
-        <nav className="site-footer__links" aria-label="Founder links">
+        <nav className="site-footer__links" aria-label={f.linksLabel}>
           <ExternalLink href={FOUNDER_LINKS.portfolio} className="pill-link">
             <img src={globeIcon} alt="" width={24} height={24} />
-            <span>{f.links.website}</span>
+            <span>{f.links.portfolio}</span>
             <span className="sr-only"> {f.newTab}</span>
           </ExternalLink>
           <ExternalLink href={FOUNDER_LINKS.instagram} className="pill-link">
@@ -73,7 +77,7 @@ function Content() {
             <span>{f.links.instagram}</span>
             <span className="sr-only"> {f.newTab}</span>
           </ExternalLink>
-          {(['behance', 'freelancehunt', 'linkedin', 'telegram'] as const).map((k) => (
+          {(['linkedin', 'behance', 'freelancehunt', 'telegram'] as const).map((k) => (
             <ExternalLink key={k} href={FOUNDER_LINKS[k]} className="text-link">
               {f.links[k]}
               {'  '}

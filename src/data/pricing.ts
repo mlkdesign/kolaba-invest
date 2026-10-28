@@ -1,6 +1,6 @@
 /**
  * Single source of truth for subscription prices.
- * Slide 08 (Business Model) and slide 10 (Revenue Calculator) both read from here.
+ * The Business Model cards and the Revenue Calculator both read from here.
  */
 export const PRICING = {
   creatorPro: {
