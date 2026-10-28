@@ -1,4 +1,5 @@
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { Glow } from '../components/Glow';
 import { ContactForm } from '../components/ContactForm';
 import { ExternalLink } from '../components/Button';
@@ -27,7 +28,7 @@ function Content() {
       <div className="founder">
         <div className="founder__left">
           <header className="intro founder__intro">
-            <p className="eyebrow">{f.eyebrow}</p>
+            <SlideEyebrow />
             <h2 className="display">
               {f.title.map((l) => (
                 <span key={l}>{l}</span>

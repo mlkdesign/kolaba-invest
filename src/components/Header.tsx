@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NAV_TARGETS, SLIDES, slideIndex } from '../data/slides';
-import { useContent, AVAILABLE_LOCALES } from '../content';
+import { useContent, useLocale, useSetLocale, AVAILABLE_LOCALES } from '../content';
 import { useEngine } from '../engine/SlideEngine';
 import logoWhite from '../assets/icons/logo-white.svg';
 import logoDark from '../assets/icons/logo-dark.svg';
@@ -15,7 +15,8 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
   const dark = theme === 'light';
-  const ruAvailable = (AVAILABLE_LOCALES as string[]).includes('ru');
+  const locale = useLocale();
+  const setLocale = useSetLocale();
 
   const go = (index: number) => {
     setMenuOpen(false);
@@ -67,18 +68,19 @@ export function Header() {
 
         <div className="site-header__actions">
           <div className="lang" role="group" aria-label={c.header.languageLabel}>
-            <span className="lang__item is-active" aria-current="true" lang="en">
-              EN
-            </span>
-            {ruAvailable ? (
-              <button type="button" className="lang__item" lang="ru">
-                / RU
+            {AVAILABLE_LOCALES.map((l, i) => (
+              <button
+                key={l}
+                type="button"
+                className={`lang__item ${l === locale ? 'is-active' : ''}`}
+                lang={l}
+                aria-pressed={l === locale}
+                onClick={() => setLocale(l)}
+              >
+                {i > 0 && <span aria-hidden="true">/ </span>}
+                {l.toUpperCase()}
               </button>
-            ) : (
-              <span className="lang__item is-pending" title={c.header.ruPending} aria-label={c.header.ruPending}>
-                / RU
-              </span>
-            )}
+            ))}
           </div>
           <a
             href="#demo"

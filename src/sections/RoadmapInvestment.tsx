@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { DonutChart, SEGMENT_ANGLES } from '../components/DonutChart';
 import { Popover, type Anchor } from '../components/Popover';
@@ -46,7 +47,7 @@ function Content() {
     q('.phase').forEach((row, i) => {
       const t = 0.45 + i * 0.28;
       tl.from(row.querySelector('.phase__node'), { scale: 0, duration: 0.45, ease: 'back.out(2.2)' }, t);
-      tl.from(row.querySelectorAll('.phase__id, .phase__text'), { autoAlpha: 0, x: -14, duration: 0.6, stagger: 0.08 }, t + 0.05);
+      tl.from(row.querySelectorAll('.phase__id, .phase__text'), { autoAlpha: 0, x: -14, duration: 0.95, stagger: 0.08 }, t + 0.05);
     });
     tl.from(q('.donut'), { autoAlpha: 0, scale: 0.96, duration: 0.8 }, 0.2);
     reveal(tl, q('.legend__row'), 1.05, { stagger: 0.09, y: 12 });
@@ -120,7 +121,7 @@ function Content() {
       <div className="roadmap">
         <div className="roadmap__left">
           <header className="intro roadmap__intro">
-            <p className="eyebrow">{c.eyebrow}</p>
+            <SlideEyebrow />
             <h2 className="display">
               {c.title.map((l) => (
                 <span key={l}>{l}</span>
@@ -267,7 +268,9 @@ function Content() {
                 {c.nextPhase}
               </Button>
               <button type="button" className="phase-detail__close" aria-label={c.close} onClick={() => setPhase(null)}>
-                ×
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
               </button>
             </div>
           </>

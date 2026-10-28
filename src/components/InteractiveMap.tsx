@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { geoCentroid, geoMercator, geoPath, type GeoProjection } from 'd3-geo';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { geoCentroid, geoMercator, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import type { Topology, GeometryCollection } from 'topojson-specification';
-import { CITY_MARKERS, MAP_EXCLUDED, MARKET_COUNTRIES, type CityMarker, type RegionId } from '../data/market';
+import { MAP_EXCLUDED, MARKET_COUNTRIES, type RegionId } from '../data/market';
 import { Popover, type Anchor } from './Popover';
 import { useContent } from '../content';
 import { useSection } from '../engine/SectionContext';
@@ -11,20 +11,8 @@ import { useSection } from '../engine/SectionContext';
 const W = 800;
 const H = 420;
 
-/** Label placement around each marker (SVG units). */
-const LABELS: Record<string, { dx: number; dy: number; anchor: 'start' | 'end' }> = {
-  warsaw: { dx: 10, dy: -8, anchor: 'start' },
-  berlin: { dx: -7, dy: -3, anchor: 'end' },
-  prague: { dx: -7, dy: 11, anchor: 'end' },
-  belgrade: { dx: 7, dy: 4, anchor: 'start' },
-  tbilisi: { dx: 7, dy: 4, anchor: 'start' },
-  dubai: { dx: 7, dy: 4, anchor: 'start' },
-  phuket: { dx: 7, dy: 4, anchor: 'start' },
-  bali: { dx: 10, dy: 8, anchor: 'start' },
-};
-
 type CountryShape = { id: string; name: string; region: RegionId; d: string };
-type MapData = { countries: CountryShape[]; basemap: string; projection: GeoProjection };
+type MapData = { countries: CountryShape[]; basemap: string };
 
 const REGION_ORDER: RegionId[] = ['eu', 'cis', 'gulf', 'asia'];
 const regionOf = new Map<string, RegionId>();
@@ -77,20 +65,15 @@ function loadMap(): Promise<MapData> {
     countries.sort(
       (a, b) => REGION_ORDER.indexOf(a.region) - REGION_ORDER.indexOf(b.region) || a.name.localeCompare(b.name),
     );
-    return { countries, basemap: rest.join(''), projection };
+    return { countries, basemap: rest.join('') };
   });
   return cache;
 }
 
-type Active = { kind: 'country'; id: string } | { kind: 'city'; id: string } | null;
+type Active = { kind: 'country'; id: string } | null;
 
-type Props = {
-  /** Plays the entrance (markers + connection lines). */
-  playKey: number;
-  reducedMotion: boolean;
-};
-
-export function InteractiveMap({ playKey, reducedMotion }: Props) {
+/** Market countries are highlighted; hovering, tapping or focusing one shows its region. */
+export function InteractiveMap() {
   const c = useContent().markets;
   const wrap = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<MapData | null>(null);
@@ -117,28 +100,6 @@ export function InteractiveMap({ playKey, reducedMotion }: Props) {
     return () => io.disconnect();
   }, []);
 
-  const points = useMemo(() => {
-    if (!data) return [];
-    return CITY_MARKERS.map((m) => {
-      const [x, y] = data.projection([m.lon, m.lat]) ?? [0, 0];
-      return { ...m, x, y };
-    });
-  }, [data]);
-
-  const connections = useMemo(() => {
-    if (points.length < 2) return null;
-    const byId = Object.fromEntries(points.map((p) => [p.id, p]));
-    const w = byId.warsaw;
-    const b = byId.bali;
-    const dx = b.x - w.x;
-    const dy = b.y - w.y;
-    // Arc shape follows the Figma curve: leaves Warsaw eastwards, lands on Bali from above.
-    const arc = `M${w.x},${w.y} C${w.x + dx * 0.37},${w.y - dy * 0.09} ${w.x + dx * 0.7},${w.y + dy * 0.24} ${b.x},${b.y}`;
-    const chainIds = ['bali', 'phuket', 'dubai', 'tbilisi', 'belgrade', 'prague', 'berlin', 'warsaw'];
-    const chain = 'M' + chainIds.map((id) => `${byId[id].x},${byId[id].y}`).join(' L');
-    return { arc, chain };
-  }, [points]);
-
   const close = useCallback(() => {
     setActive(null);
     setPinned(false);
@@ -164,15 +125,6 @@ export function InteractiveMap({ playKey, reducedMotion }: Props) {
       window.removeEventListener('keydown', onKey);
     };
   }, [active, close]);
-
-  // Entrance animation of markers + lines (CSS driven, replayed via key).
-  const [entered, setEntered] = useState(false);
-  useEffect(() => {
-    if (!data) return;
-    setEntered(false);
-    const id = window.setTimeout(() => setEntered(true), 60);
-    return () => window.clearTimeout(id);
-  }, [playKey, data]);
 
   const anchorFor = (el: Element | null | undefined): Anchor | null => (el ? () => el.getBoundingClientRect() : null);
 
@@ -203,14 +155,11 @@ export function InteractiveMap({ playKey, reducedMotion }: Props) {
   };
 
   const activeCountry = active?.kind === 'country' ? data?.countries.find((x) => x.id === active.id) : undefined;
-  const activeCity = active?.kind === 'city' ? points.find((p) => p.id === active.id) : undefined;
-
-  const cityTooltip = (m: CityMarker) => (m.id === 'bali' ? c.baliTooltip : m.id === 'warsaw' ? c.warsawTooltip : c.cities[m.id as keyof typeof c.cities]);
 
   return (
     <div
       ref={wrap}
-      className={`map ${active ? 'has-active' : ''} ${entered || reducedMotion ? 'is-entered' : ''} ${data ? 'is-loaded' : ''}`}
+      className={`map ${active ? 'has-active' : ''} ${data ? 'is-loaded' : ''}`}
       data-keys-owned=""
     >
       <svg className="map__svg" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={c.mapLabel}>
@@ -263,91 +212,15 @@ export function InteractiveMap({ playKey, reducedMotion }: Props) {
                 );
               })}
             </g>
-            {connections && (
-              <g className="map__lines" aria-hidden="true">
-                <path className="map__line map__line--chain" d={connections.chain} pathLength={1} />
-                <path className="map__line map__line--arc" d={connections.arc} pathLength={1} />
-              </g>
-            )}
-            <g className="map__markers">
-              {points.map((p, i) => {
-                const label = LABELS[p.id];
-                const pilot = !!p.pilot;
-                const content = (
-                  <g
-                    className={`map__marker ${pilot ? 'map__marker--pilot' : ''}`}
-                    style={{ '--i': i } as React.CSSProperties}
-                    transform={`translate(${p.x} ${p.y})`}
-                  >
-                    {pilot && <circle className="map__pulse" r={6} />}
-                    <circle className="map__dot" r={pilot ? 6 : 3} />
-                    <text
-                      className="map__label"
-                      x={label.dx}
-                      y={label.dy}
-                      textAnchor={label.anchor}
-                      dominantBaseline="middle"
-                    >
-                      {c.cities[p.id as keyof typeof c.cities]}
-                    </text>
-                  </g>
-                );
-                if (!pilot) return <g key={p.id} aria-hidden="true">{content}</g>;
-                return (
-                  <g
-                    key={p.id}
-                    className="map__pilot-hit"
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`${cityTooltip(p)} — ${c.pilotLabel}`}
-                    onPointerEnter={(e) => {
-                      if (e.pointerType !== 'mouse' || pinned) return;
-                      setActive({ kind: 'city', id: p.id });
-                      setAnchor(anchorFor(e.currentTarget.querySelector('.map__dot')));
-                    }}
-                    onPointerLeave={(e) => {
-                      if (e.pointerType !== 'mouse' || pinned) return;
-                      setActive(null);
-                    }}
-                    onFocus={(e) => {
-                      setActive({ kind: 'city', id: p.id });
-                      setAnchor(anchorFor(e.currentTarget.querySelector('.map__dot')));
-                    }}
-                    onBlur={() => !pinned && setActive(null)}
-                    onClick={(e) => {
-                      if (pinned && activeCity?.id === p.id) return close();
-                      setActive({ kind: 'city', id: p.id });
-                      setAnchor(anchorFor(e.currentTarget.querySelector('.map__dot')));
-                      setPinned(true);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        (e.currentTarget as SVGGElement).dispatchEvent(new MouseEvent('click', { bubbles: true }));
-                      }
-                    }}
-                  >
-                    <circle r={16} className="map__hit" />
-                    {content}
-                  </g>
-                );
-              })}
-            </g>
           </>
         )}
       </svg>
 
-      <Popover open={!!(activeCountry || activeCity)} anchor={anchor} offset={16} className="map-tip">
+      <Popover open={!!activeCountry} anchor={anchor} offset={16} className="map-tip">
         {activeCountry && (
           <>
             <span className="map-tip__name">{activeCountry.name}</span>
             <span className="map-tip__region">{c.regions[activeCountry.region]}</span>
-          </>
-        )}
-        {activeCity && (
-          <>
-            <span className="map-tip__name">{cityTooltip(activeCity)}</span>
-            <span className="map-tip__region">{c.pilotLabel}</span>
           </>
         )}
       </Popover>

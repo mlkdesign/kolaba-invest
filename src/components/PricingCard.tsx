@@ -121,13 +121,14 @@ export function PricingCard({ plan, selected, onSelect }: Props) {
         onClick={() => onSelect(plan, cycle)}
       >
         <span className="plan__cta-label">
-          {selected ? `✓ ${c.selected(copy.label)}` : c.select(copy.label)} · {money(current.perMonth)}/mo
+          {selected ? c.selected(copy.label) : c.select(copy.label)} · {money(current.perMonth)}
+          {c.perMonthShort}
         </span>
         <img src={icons.lock} alt="" className="plan__cta-icon" />
       </button>
 
       <div className="plan__features plan__reveal">
-        <div className="plan__col">
+        <div className="plan__col plan__col--free">
           <p className="plan__col-title">{c.free}</p>
           <ul>
             {copy.free.map((f) => (

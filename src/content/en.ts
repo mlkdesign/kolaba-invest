@@ -1,6 +1,6 @@
 /**
- * English copy. To add Russian, create `ru.ts` with the same `Content` shape
- * and register it in `content/index.tsx`.
+ * English copy. Every other locale (`ru.ts`) has the same `Content` shape;
+ * locales are registered in `content/index.tsx`.
  */
 export const en = {
   meta: {
@@ -19,25 +19,25 @@ export const en = {
       founder: 'Founder',
     },
     languageLabel: 'Language',
-    ruPending: 'Russian version coming soon',
     exploreDemo: 'Explore Demo',
     contact: 'Contact',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
   },
-  slides: {
-    hero: 'THE OPPORTUNITY',
-    problem: 'THE PRODUCT',
-    product: 'EXPERIENCE KOLABA',
-    demo: 'WHY KOLABA',
-    advantage: 'TARGET MARKETS',
-    markets: 'AUDIENCE RESEARCH',
-    research: 'BUSINESS MODEL',
-    business: 'GROWTH STRATEGY',
-    gtm: 'FINANCIAL POTENTIAL',
-    calculator: 'EXECUTION & INVESTMENT',
-    roadmap: 'MEET THE FOUNDER',
-    founder: '',
+  /** Short slide titles: shown in each slide's eyebrow ("05 / …", numbered by position) and as the "NEXT:" label. */
+  slideTitles: {
+    hero: '',
+    problem: 'THE OPPORTUNITY',
+    product: 'THE PRODUCT',
+    demo: 'EXPERIENCE KOLABA',
+    advantage: 'WHY KOLABA',
+    markets: 'TARGET MARKETS',
+    research: 'AUDIENCE RESEARCH',
+    business: 'BUSINESS MODEL',
+    gtm: 'GROWTH STRATEGY',
+    calculator: 'FINANCIAL POTENTIAL',
+    roadmap: 'EXECUTION & INVESTMENT',
+    founder: 'MEET THE FOUNDER',
   },
   sectionNames: {
     hero: 'Hero',
@@ -69,7 +69,6 @@ export const en = {
     phoneBusinessAlt: 'KOLABA business profile screen: Amara Bali, boutique hospitality brand',
   },
   problem: {
-    eyebrow: '01 / THE OPPORTUNITY',
     title: ['Creativity is growing.', 'Connections are falling behind.'],
     creators: 'CREATORS',
     businesses: 'BUSINESSES',
@@ -83,7 +82,6 @@ export const en = {
     note: 'U.S. creator advertising spend — industry context, not KOLABA’s addressable market. Brief-supplied figures and source; not independently verified.',
   },
   product: {
-    eyebrow: '02 / THE PRODUCT',
     title: ['Two sides.', 'One creative ecosystem.'],
     tagline: 'Discover. Connect. Collaborate.',
     creator: {
@@ -101,7 +99,6 @@ export const en = {
     shared: 'Reels / Jobs / Profiles / Messages / Applications',
   },
   demo: {
-    eyebrow: '03 / EXPERIENCE KOLABA',
     title: ['Don’t just', 'see it.', 'Try it.'],
     description: 'Explore how KOLABA works directly inside an interactive iPhone.',
     disclaimer: 'Prototype experience. Some features use simulated content.',
@@ -119,7 +116,6 @@ export const en = {
     ],
   },
   advantage: {
-    eyebrow: '04 / WHY KOLABA',
     title: ['Discovery first.', 'Complexity later.'],
     lead: 'A focused mobile experience for finding creative collaborators.',
     items: [
@@ -137,7 +133,6 @@ export const en = {
     note: 'MVP does not process creator–business payments or verify collaboration completion.',
   },
   markets: {
-    eyebrow: '05 / TARGET MARKETS',
     title: ['Global ambition.', 'Community-first launch.'],
     lead: 'Initial focus: creator and business communities connected to CIS & Eastern Europe, including those living and working internationally.',
     mapLabel: 'Target markets map. Use arrow keys to move between highlighted countries.',
@@ -147,19 +142,6 @@ export const en = {
       gulf: 'International community hub',
       asia: 'Asia',
     },
-    cities: {
-      warsaw: 'Warsaw',
-      berlin: 'Berlin',
-      prague: 'Prague',
-      belgrade: 'Belgrade',
-      tbilisi: 'Tbilisi',
-      dubai: 'Dubai',
-      phuket: 'Phuket',
-      bali: 'Bali',
-    },
-    pilotLabel: 'Pilot location',
-    baliTooltip: 'Bali, Indonesia',
-    warsawTooltip: 'Warsaw, Poland',
     indicators: {
       poland: 'Instagram advertising reach in Poland, late 2025',
       thailand: 'Instagram advertising reach in Thailand, late 2025',
@@ -171,7 +153,6 @@ export const en = {
     tagline: 'One connected community. Multiple local markets.',
   },
   research: {
-    eyebrow: '06 / AUDIENCE RESEARCH',
     title: ['Identifying our', 'reachable audience.'],
     lead: 'Advertising audience research and market validation reveal where relevant creators and businesses can be reached efficiently.',
     pending: 'EVIDENCE PENDING',
@@ -203,7 +184,6 @@ export const en = {
     statement: 'From broad market potential to measurable customer demand.',
   },
   business: {
-    eyebrow: '07 / BUSINESS MODEL',
     title: ['Free to start.', 'Valuable to', 'upgrade.'],
     lead: 'Subscription-based. No mandatory collaboration commission.',
     yearly: 'Yearly',
@@ -215,6 +195,8 @@ export const en = {
     select: (plan: string) => `Select ${plan}`,
     selected: (plan: string) => `${plan} selected`,
     selectionStatus: (plan: string, price: string) => `${plan} selected — ${price}`,
+    perMonthShort: '/mo',
+    perMonth: '/month',
     free: 'FREE',
     proUpgrade: 'PRO UPGRADE',
     plans: {
@@ -234,7 +216,6 @@ export const en = {
     note: 'Prices and feature packaging are initial hypotheses.',
   },
   gtm: {
-    eyebrow: '08 / GROWTH STRATEGY',
     title: ['Start focused.', 'Build real momentum.'],
     tagline: 'Marketplace activity before aggressive scaling.',
     stages: [
@@ -253,7 +234,6 @@ export const en = {
     note: 'Internal plan • $18,100 total marketing budget includes $9,000 in paid advertising.',
   },
   calculator: {
-    eyebrow: '09 / FINANCIAL POTENTIAL',
     title: ['The numbers.', 'Your scenario.'],
     lead: 'Explore how audience growth and paid conversion may influence recurring revenue.',
     tabs: { conservative: 'Conservative', base: 'Base', upside: 'Upside', custom: 'Custom' },
@@ -283,7 +263,6 @@ export const en = {
     liveSummary: (mrr: string, subs: string) => `Gross MRR ${mrr}, ${subs} paying subscribers`,
   },
   roadmap: {
-    eyebrow: '10 / EXECUTION & INVESTMENT',
     title: ['$95,000 to launch', 'and validate KOLABA.'],
     durations: {
       development: 'Months Product Development',
@@ -331,7 +310,6 @@ export const en = {
     team: 'TEAM: Founder / CEO / Product Designer ·  iOS & Backend Developers · QA / DevOps / Growth Contractors',
   },
   founder: {
-    eyebrow: '11 / MEET THE FOUNDER',
     title: ['The person', 'behind KOLABA.'],
     name: 'Jack Milka',
     role: 'Founder & CEO / Product Designer',

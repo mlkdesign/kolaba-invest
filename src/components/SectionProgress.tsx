@@ -8,8 +8,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 export function SectionProgress({ index }: { index: number }) {
   const c = useContent();
   const { goTo } = useEngine();
-  const id = SLIDES[index].id;
-  const nextLabel = c.slides[id];
+  const nextId = SLIDES[index + 1]?.id;
+  const nextLabel = nextId ? c.slideTitles[nextId] : '';
   const isLast = index === SLIDE_COUNT - 1;
 
   return (

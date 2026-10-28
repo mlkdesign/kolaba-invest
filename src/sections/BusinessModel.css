@@ -236,6 +236,7 @@
   flex-direction: column;
   gap: u(12);
   width: u(120);
+  transition: opacity 400ms var(--ease-out);
 }
 .plan__col--pro {
   flex: 1;
@@ -249,21 +250,24 @@
   line-height: normal;
 }
 .plan__col-title {
-  color: var(--muted-dark);
-  font-weight: 600;
+  font-weight: 700;
   font-size: t(11);
   line-height: 1.4;
+  transition: color 400ms var(--ease-out);
 }
-.plan__col--pro .plan__col-title {
+/* Free features are in focus until the Pro plan is selected, then Pro takes over. */
+.plan__col--pro,
+.plan.is-selected .plan__col--free {
+  opacity: 0.4;
+}
+.plan.is-selected .plan__col--pro {
+  opacity: 1;
+}
+.plan.is-selected .plan__col--pro .plan__col-title {
   color: var(--accent);
-  font-weight: 700;
 }
 .plan.is-selected .plan__features {
   border-color: rgba(var(--accent-rgb), 0.5);
-}
-.plan.is-selected .plan__col--pro li::before {
-  content: '✓ ';
-  color: var(--accent);
 }
 
 html.is-flow .business {

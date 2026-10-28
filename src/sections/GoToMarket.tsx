@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { Popover, type Anchor } from '../components/Popover';
 import { useContent } from '../content';
@@ -44,7 +45,7 @@ function Content() {
       <div className="slide__rule" />
       <header className="gtm__head">
         <div className="intro gtm__intro">
-          <p className="eyebrow">{c.eyebrow}</p>
+          <SlideEyebrow />
           <h2 className="display">
             {c.title.map((l) => (
               <span key={l}>{l}</span>

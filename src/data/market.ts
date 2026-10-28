@@ -29,25 +29,6 @@ export const MARKET_COUNTRIES: Record<RegionId, string[]> = {
   asia: ['764', '360'],
 };
 
-export type CityMarker = {
-  id: string;
-  lon: number;
-  lat: number;
-  pilot?: boolean;
-};
-
-/** Order defines the community connection path drawn on the map. */
-export const CITY_MARKERS: CityMarker[] = [
-  { id: 'warsaw', lon: 21.0122, lat: 52.2297, pilot: true },
-  { id: 'berlin', lon: 13.405, lat: 52.52 },
-  { id: 'prague', lon: 14.4378, lat: 50.0755 },
-  { id: 'belgrade', lon: 20.4489, lat: 44.7866 },
-  { id: 'tbilisi', lon: 44.8271, lat: 41.7151 },
-  { id: 'dubai', lon: 55.2708, lat: 25.2048 },
-  { id: 'phuket', lon: 98.3923, lat: 7.8804 },
-  { id: 'bali', lon: 115.1889, lat: -8.4095, pilot: true },
-];
-
 /**
  * Countries left off the Europe–Asia map (Africa, Oceania), matching the Figma
  * "Stylized Europe and Asia" artwork. ISO 3166-1 numeric.

@@ -38,8 +38,10 @@ export function useEngine() {
   return ctx;
 }
 
-const TRANSITION_S = 0.9;
-const EASE = 'power2.inOut';
+const TRANSITION_S = 0.72;
+const EASE = 'power3.inOut';
+/** Used when a new move interrupts a running one, so the track never stalls mid-way. */
+const EASE_RETARGET = 'power3.out';
 
 /** Keys are ignored while the user works with form fields and widgets that use arrows themselves. */
 function isKeyboardOwner(el: EventTarget | null) {
@@ -97,6 +99,19 @@ export function SlideEngine({ children }: { children: ReactNode }) {
     sections.current[index] = el;
   }, []);
 
+  /** A section temporarily shifted next to the current one for a long jump. */
+  const jumpRef = useRef<{ el: HTMLElement; index: number } | null>(null);
+
+  const finishJump = useCallback(() => {
+    const jump = jumpRef.current;
+    if (!jump) return;
+    jumpRef.current = null;
+    jump.el.style.removeProperty('transform');
+    jump.el.style.removeProperty('z-index');
+    posRef.current.pos = jump.index;
+    applyPos();
+  }, [applyPos]);
+
   const goTo = useCallback(
     (raw: number) => {
       const index = Math.max(0, Math.min(SLIDE_COUNT - 1, raw));
@@ -105,22 +120,41 @@ export function SlideEngine({ children }: { children: ReactNode }) {
         return;
       }
       if (index === activeRef.current && !tweenRef.current?.isActive()) return;
-      const distance = Math.abs(posRef.current.pos - index);
-      const duration = reducedMotion ? 0 : Math.min(1.25, TRANSITION_S + (distance - 1) * 0.06);
-      intent.current.begin(performance.now(), duration * 1000);
+      const running = !!tweenRef.current?.isActive();
+      tweenRef.current?.kill();
+      finishJump();
+
+      const from = posRef.current.pos;
+      const dir = Math.sign(index - from);
+      // Menu jumps never scroll through the slides in between: the target is placed
+      // right next to the current slide, so it looks like a single transition.
+      let to = index;
+      if (Math.abs(index - activeRef.current) > 1 && Math.abs(index - from) > 1.01 && !reducedMotion) {
+        to = dir > 0 ? Math.floor(from) + 1 : Math.ceil(from) - 1;
+        const el = sections.current[index];
+        if (el) {
+          el.style.transform = `translate3d(0, calc(${to - index} * 100dvh), 0)`;
+          el.style.zIndex = '2';
+          jumpRef.current = { el, index };
+        } else {
+          to = index;
+        }
+      }
+
+      const duration = reducedMotion ? 0 : TRANSITION_S * Math.min(1, Math.max(0.6, Math.abs(to - from)));
+      intent.current.begin(performance.now(), jumpRef.current ? duration * 1000 : undefined);
       activeRef.current = index;
       setActiveIndex(index);
       setVisible(new Set([index]));
-      tweenRef.current?.kill();
       tweenRef.current = gsap.to(posRef.current, {
-        pos: index,
+        pos: to,
         duration,
-        ease: EASE,
+        ease: running ? EASE_RETARGET : EASE,
         onUpdate: applyPos,
-        onComplete: () => intent.current.end(),
+        onComplete: finishJump,
       });
     },
-    [applyPos, mode, reducedMotion],
+    [applyPos, finishJump, mode, reducedMotion],
   );
 
   const next = useCallback(() => goTo(activeRef.current + 1), [goTo]);
@@ -130,11 +164,12 @@ export function SlideEngine({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     if (mode !== 'deck') return;
     tweenRef.current?.kill();
+    finishJump();
     posRef.current.pos = activeRef.current;
     applyPos();
     intent.current.reset();
     setVisible(new Set([activeRef.current]));
-  }, [mode, applyPos]);
+  }, [mode, applyPos, finishJump]);
 
   // Flow mode: restore the scroll position of the active slide, then track visibility.
   useEffect(() => {
@@ -180,7 +215,7 @@ export function SlideEngine({ children }: { children: ReactNode }) {
   useEffect(() => {
     const id = SLIDES[activeIndex]?.id;
     if (id && window.location.hash !== `#${id}`) {
-      history.replaceState(null, '', activeIndex === 0 ? window.location.pathname : `#${id}`);
+      history.replaceState(null, '', activeIndex === 0 ? window.location.pathname + window.location.search : `#${id}`);
     }
   }, [activeIndex]);
 
@@ -214,7 +249,7 @@ export function SlideEngine({ children }: { children: ReactNode }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey) return;
       if (isKeyboardOwner(e.target)) return;
-      const busy = tweenRef.current?.isActive();
+      const busy = e.repeat || !!jumpRef.current;
       let target: number | null = null;
       switch (e.key) {
         case 'ArrowDown':
@@ -259,7 +294,7 @@ export function SlideEngine({ children }: { children: ReactNode }) {
       const dx = touchStart.x - t.clientX;
       touchStart = null;
       if (Math.abs(dy) < 50 || Math.abs(dy) < Math.abs(dx) * 1.2) return;
-      if (tweenRef.current?.isActive()) return;
+      if (jumpRef.current) return;
       const target = activeRef.current + (dy > 0 ? 1 : -1);
       if (target >= 0 && target < SLIDE_COUNT) goTo(target);
     };

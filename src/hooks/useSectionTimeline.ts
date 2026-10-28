@@ -21,7 +21,7 @@ export function useSectionTimeline(build: Builder) {
     const scope = scopeRef.current;
     if (!scope) return;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', duration: 0.75 } });
+      const tl = gsap.timeline({ paused: true, defaults: { ease: 'power4.out', duration: 0.95 } });
       buildRef.current(tl, gsap.utils.selector(scope));
       tlRef.current = tl;
     }, scope);
@@ -39,7 +39,9 @@ export function useSectionTimeline(build: Builder) {
       return;
     }
     if (active) {
-      tl.restart(true);
+      // In deck mode the reveal starts once the incoming slide is mostly in view,
+      // so content doesn't animate against the moving track.
+      tl.delay(mode === 'deck' ? 0.2 : 0).restart(true);
       return;
     }
     if (mode === 'deck') {
@@ -50,8 +52,8 @@ export function useSectionTimeline(build: Builder) {
   }, [active, revealKey, mode, reducedMotion]);
 }
 
-/** The standard reveal: fade + rise with a light stagger. */
+/** The standard reveal: fade + soft rise with a light stagger and a long, gentle settle. */
 export function reveal(tl: gsap.core.Timeline, targets: gsap.TweenTarget, position: gsap.Position = 0, vars: gsap.TweenVars = {}) {
   if (Array.isArray(targets) && targets.length === 0) return tl;
-  return tl.from(targets, { autoAlpha: 0, y: 28, duration: 0.75, stagger: 0.09, ...vars }, position);
+  return tl.from(targets, { autoAlpha: 0, y: 22, duration: 1, ease: 'power4.out', stagger: 0.08, ...vars }, position);
 }

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { RevenueCalculator } from '../components/RevenueCalculator';
 import { ScenarioChart } from '../components/ScenarioChart';
 import { useContent } from '../content';
@@ -40,7 +41,7 @@ function Content() {
       <div className="calc-section">
         <div className="calc-section__left">
           <header className="intro calc-section__intro">
-            <p className="eyebrow">{c.eyebrow}</p>
+            <SlideEyebrow />
             <h2 className="display">
               {c.title.map((l) => (
                 <span key={l}>{l}</span>

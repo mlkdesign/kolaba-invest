@@ -114,8 +114,9 @@
   justify-content: center;
 }
 .hero__badge--business {
-  left: calc(148.98 / 630 * 100%);
-  top: calc(24 / 588 * 100%);
+  /* Sits on the top edge of the business phone it labels. */
+  left: calc(140 / 630 * 100%);
+  top: calc(92 / 588 * 100%);
   width: calc(136.55 / 630 * 100%);
   height: calc(35.55 / 588 * 100%);
   z-index: 2;

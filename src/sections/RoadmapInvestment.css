@@ -119,16 +119,21 @@
   --sweep: 360deg;
   position: absolute;
   inset: 0;
+}
+/* The sweep mask only exists while the ring draws in; afterwards it would clip a lifted segment. */
+.donut__ring.is-sweeping {
   -webkit-mask-image: conic-gradient(from 0deg, #000 var(--sweep), transparent var(--sweep));
   mask-image: conic-gradient(from 0deg, #000 var(--sweep), transparent var(--sweep));
 }
 .donut__segment {
   position: absolute;
   pointer-events: none;
+  /* Each segment is its own compositor layer, so lifting one never re-rasterizes the others. */
+  will-change: transform;
+  backface-visibility: hidden;
   transition:
     opacity var(--dur-fast),
-    transform 300ms var(--ease-out),
-    filter var(--dur-fast);
+    transform 300ms var(--ease-out);
 }
 .donut__segment svg {
   width: 100%;
@@ -143,8 +148,13 @@
   opacity: 0.35;
 }
 .donut__segment.is-active {
-  transform: translate(calc(var(--dx) * u(5)), calc(var(--dy) * u(5)));
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+  transform: translate3d(calc(var(--dx) * u(6)), calc(var(--dy) * u(6)), 0);
+}
+.donut__segment svg path {
+  transition: filter var(--dur-fast);
+}
+.donut__segment.is-active svg path {
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
 }
 .donut__total,
 .donut__caption {
@@ -305,14 +315,24 @@
   margin-top: 4px;
 }
 .phase-detail__close {
+  flex: none;
   display: grid;
   place-items: center;
   width: 36px;
   height: 36px;
   margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--line-dark);
   border-radius: 50%;
-  font-size: 20px;
+  color: var(--c-white);
+  line-height: 0;
   opacity: 0.7;
+  transition:
+    opacity var(--dur-fast),
+    background var(--dur-fast);
+}
+.phase-detail__close svg {
+  display: block;
 }
 .phase-detail__close:hover {
   opacity: 1;

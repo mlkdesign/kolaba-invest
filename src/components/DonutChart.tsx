@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { INVESTMENT_CATEGORIES, TOTAL_ROUND, type InvestmentCategory } from '../data/budget';
 import { useSection } from '../engine/SectionContext';
@@ -29,6 +29,9 @@ export const SEGMENT_ANGLES = (() => {
   return out;
 })();
 
+const reducedMotionAtStart = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 type Props = {
   active: InvestmentCategory['id'] | null;
   onHover: (id: InvestmentCategory['id'] | null, source: 'pointer' | 'tap') => void;
@@ -39,6 +42,7 @@ type Props = {
 
 export function DonutChart({ active, onHover, label, caption, rootRef }: Props) {
   const ring = useRef<HTMLDivElement>(null);
+  const [sweeping, setSweeping] = useState(!reducedMotionAtStart());
   const { active: sectionActive, revealKey } = useSection();
   const { reducedMotion, mode } = useEngine();
 
@@ -47,17 +51,31 @@ export function DonutChart({ active, onHover, label, caption, rootRef }: Props) 
     const el = ring.current;
     if (!el) return;
     if (reducedMotion) {
-      el.style.setProperty('--sweep', '360deg');
+      setSweeping(false);
       return;
     }
     if (!sectionActive) {
       if (mode === 'deck') {
-        const id = window.setTimeout(() => el.style.setProperty('--sweep', '0deg'), 1000);
+        const id = window.setTimeout(() => {
+          setSweeping(true);
+          el.style.setProperty('--sweep', '0deg');
+        }, 1000);
         return () => window.clearTimeout(id);
       }
       return;
     }
-    const tween = gsap.fromTo(el, { '--sweep': '0deg' }, { '--sweep': '360deg', duration: 1.3, delay: 0.35, ease: 'power2.inOut' });
+    setSweeping(true);
+    const tween = gsap.fromTo(
+      el,
+      { '--sweep': '0deg' },
+      {
+        '--sweep': '360deg',
+        duration: 1.3,
+        delay: 0.45,
+        ease: 'power2.inOut',
+        onComplete: () => setSweeping(false),
+      },
+    );
     return () => void tween.kill();
   }, [sectionActive, revealKey, reducedMotion, mode]);
 
@@ -69,7 +87,7 @@ export function DonutChart({ active, onHover, label, caption, rootRef }: Props) 
   return (
     <div className="donut" ref={rootRef} role="img" aria-label={label}>
       <div
-        className={`donut__ring ${active ? 'has-active' : ''}`}
+        className={`donut__ring ${sweeping ? 'is-sweeping' : ''} ${active ? 'has-active' : ''}`}
         ref={ring}
         onPointerOver={(e) => {
           if (e.pointerType !== 'mouse') return;

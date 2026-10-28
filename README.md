@@ -47,10 +47,12 @@ the site switches to **flow mode**: natural scrolling, stacked layouts, soft sna
 
 ## Navigation (deck mode)
 
-`src/engine/wheelIntent.ts` is a small state machine:
-`idle → transitioning → cooldown (waits for the gesture/inertia to end) → idle`.
+`src/engine/wheelIntent.ts` is a small state machine: `idle → locked → idle`.
 One deliberate wheel/trackpad gesture moves exactly one slide; trackpad inertia never
-triggers a second move. Keyboard: ↑/↓, PageUp/PageDown, Space, Home/End (ignored inside
+triggers a second move, but a new swipe (a pause, a direction change or a fresh spike
+after the tail decays) moves again right away, so slides can be flipped quickly.
+Header links jump straight to the target: it is placed next to the current slide, so a
+long jump looks like a single transition. Keyboard: ↑/↓, PageUp/PageDown, Space, Home/End (ignored inside
 inputs, sliders, radio groups and the map). Touch swipe, header links, the progress-row
 arrows and `#hash` deep links are supported. Tabbing into another slide brings it into view.
 
@@ -64,13 +66,15 @@ arrows and `#hash` deep links are supported. Tabbing into another slide brings i
 | Market data, map countries, cities | `src/data/market.ts` |
 | Research screenshots (slide 07) | `src/data/research.ts` — add `{ src, alt }` items, no JSX edits |
 | Founder links, legal routes, form endpoint | `src/data/contacts.ts` |
-| All copy (English) | `src/content/en.ts` |
+| All copy | `src/content/en.ts`, `src/content/ru.ts` |
 
-### Adding Russian
+### Languages
 
-Create `src/content/ru.ts` exporting an object of type `Content`, register it in
-`LOCALES` in `src/content/index.tsx`, and the header's `RU` item becomes a real switch.
-Until then RU is shown as "coming soon" (not a fake toggle).
+EN and RU share the `Content` shape (`ru.ts` is type-checked against `en.ts`). The header
+switch stores the choice in `localStorage`; `?lang=ru` opens the Russian version directly.
+Slide eyebrows ("05 / …") and "NEXT:" labels come from `slideTitles` and are numbered by
+position, so reordering `SLIDES` in `src/data/slides.ts` (and the sections in `App.tsx`)
+needs no copy changes.
 
 ### Live prototype (slide 04)
 

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { useContent } from '../content';
 import { useSection } from '../engine/SectionContext';
 import { reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
@@ -38,7 +39,7 @@ function Content() {
       <div className="slide__rule" />
       <header className="product__intro">
         <div className="intro">
-          <p className="eyebrow">{c.eyebrow}</p>
+          <SlideEyebrow />
           <h2 className="display">
             {c.title.map((l) => (
               <span key={l}>{l}</span>

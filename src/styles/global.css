@@ -343,15 +343,16 @@ html.is-flow .slide {
   font-size: t(11);
   line-height: 1.4;
 }
+.lang__item {
+  opacity: 0.6;
+  transition: opacity var(--dur-fast);
+}
+.lang__item:hover,
+.lang__item.is-active {
+  opacity: 1;
+}
 .lang__item.is-active {
   font-weight: 700;
-}
-.lang__item.is-pending {
-  opacity: 0.5;
-  cursor: default;
-}
-.site-header--light .lang__item.is-pending {
-  opacity: 0.6;
 }
 .site-header__demo {
   font-size: t(12);

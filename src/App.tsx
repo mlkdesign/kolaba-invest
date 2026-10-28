@@ -31,11 +31,11 @@ function Deck() {
           <ProductEcosystem />
           <InteractiveDemo />
           <CompetitiveAdvantage />
-          <TargetMarkets />
-          <AudienceResearch />
           <BusinessModel />
           <GoToMarket />
           <RevenueCalculatorSection />
+          <TargetMarkets />
+          <AudienceResearch />
           <RoadmapInvestment />
           <FounderContact />
         </div>

@@ -25,7 +25,7 @@ function HeroContent() {
       .from(q('.hero__eyebrow'), { autoAlpha: 0, y: 16, duration: 0.6 }, 0)
       .from(q('.hero__after'), { autoAlpha: 0, y: 24, stagger: 0.09 }, 0.45)
       .from(q('.hero__phone'), { autoAlpha: 0, y: 40, scale: 0.985, duration: 1, stagger: 0.14, ease: 'power3.out' }, 0.35)
-      .from(q('.hero__badge-in'), { autoAlpha: 0, y: 14, scale: 0.92, duration: 0.6, stagger: 0.12, ease: 'back.out(1.6)' }, 0.95)
+      .from(q('.hero__badge-in'), { autoAlpha: 0, y: 14, scale: 0.92, duration: 0.9, stagger: 0.12, ease: 'back.out(1.3)' }, 0.95)
       .from(q('.hero__investment'), { autoAlpha: 0, y: 20 }, 0.7);
   });
 

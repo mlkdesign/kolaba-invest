@@ -1,4 +1,5 @@
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { Glow } from '../components/Glow';
 import { DemoPhoneContainer } from '../components/DemoPhoneContainer';
 import { DemoExplanationSlider } from '../components/DemoExplanationSlider';
@@ -22,7 +23,7 @@ function Content() {
       <div className="demo">
         <div className="demo__left">
           <header className="intro demo__intro">
-            <p className="eyebrow">{c.eyebrow}</p>
+            <SlideEyebrow />
             <h2 className="display">
               {c.title.map((l) => (
                 <span key={l}>{l}</span>

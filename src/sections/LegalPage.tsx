@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useContent } from '../content';
-import { FOUNDER_LINKS, LEGAL_ROUTES } from '../data/contacts';
+import { BASE_PATH, FOUNDER_LINKS, LEGAL_ROUTES } from '../data/contacts';
 import logoWhite from '../assets/icons/logo-white.svg';
 import './LegalPage.css';
 
@@ -28,7 +28,7 @@ export function LegalPage({ page }: { page: LegalId }) {
 
   return (
     <main className="legal">
-      <a href="/" className="legal__logo" aria-label={c.back}>
+      <a href={BASE_PATH} className="legal__logo" aria-label={c.back}>
         <img src={logoWhite} alt="kolaba." width={84} height={18} />
       </a>
       <h1 className="legal__title">{title}</h1>
@@ -39,7 +39,7 @@ export function LegalPage({ page }: { page: LegalId }) {
           Telegram ↗
         </a>
       </p>
-      <a href="/" className="btn btn--outline btn--sm legal__back">
+      <a href={BASE_PATH} className="btn btn--outline btn--sm legal__back">
         <span className="btn__label">← {c.back}</span>
       </a>
     </main>

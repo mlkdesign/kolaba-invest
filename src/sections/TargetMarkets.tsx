@@ -1,17 +1,14 @@
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { InteractiveMap } from '../components/InteractiveMap';
 import { useContent } from '../content';
-import { useSection } from '../engine/SectionContext';
-import { useEngine } from '../engine/SlideEngine';
 import { MARKET_INDICATORS } from '../data/market';
 import { reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
 import './TargetMarkets.css';
 
 function Content() {
   const c = useContent().markets;
-  const { revealKey } = useSection();
-  const { reducedMotion } = useEngine();
 
   useSectionTimeline((tl, q) => {
     reveal(tl, q('.markets__intro > *, .markets__lead'), 0);
@@ -26,7 +23,7 @@ function Content() {
       <div className="slide__rule" />
       <div className="markets__head">
         <header className="intro markets__intro">
-          <p className="eyebrow">{c.eyebrow}</p>
+          <SlideEyebrow />
           <h2 className="display">
             {c.title.map((l) => (
               <span key={l}>{l}</span>
@@ -38,7 +35,7 @@ function Content() {
 
       <div className="markets__body">
         <div className="markets__map">
-          <InteractiveMap playKey={revealKey} reducedMotion={reducedMotion} />
+          <InteractiveMap />
         </div>
         <ul className="markets__indicators">
           {MARKET_INDICATORS.map((ind, i) => (

@@ -1,4 +1,5 @@
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { useContent } from '../content';
 import { CREATOR_AD_SPEND, SPEND_BAR_MAX_RATIO } from '../data/market';
@@ -24,7 +25,7 @@ function Content() {
     <>
       <div className="slide__rule" />
       <header className="intro problem__intro">
-        <p className="eyebrow">{c.eyebrow}</p>
+        <SlideEyebrow />
         <h2 className="display">
           {c.title.map((l) => (
             <span key={l}>{l}</span>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Slide } from '../components/Slide';
+import { SlideEyebrow } from '../components/SlideEyebrow';
 import { PricingCard } from '../components/PricingCard';
 import { useContent } from '../content';
 import { PRICING, type BillingCycle, type PlanId } from '../data/pricing';
@@ -16,19 +17,19 @@ function Content() {
     q('.plan').forEach((card, i) => {
       const t = 0.3 + i * 0.2;
       const el = card as HTMLElement;
-      tl.from(el, { autoAlpha: 0, y: 56, duration: 0.85, ease: 'power3.out' }, t);
+      tl.from(el, { autoAlpha: 0, y: 40, duration: 1.15, ease: 'power4.out' }, t);
       // Playing-card reveal: the header unfolds from its top edge.
       tl.from(
         el.querySelector('.plan__header'),
-        { rotationX: -75, autoAlpha: 0, transformOrigin: '50% 0%', transformPerspective: 1100, duration: 1, ease: 'power3.out' },
+        { rotationX: -55, autoAlpha: 0, transformOrigin: '50% 0%', transformPerspective: 1100, duration: 1.2, ease: 'power4.out' },
         t + 0.2,
       );
       // The CSS `rotate` holds the final ±15°; starting from the opposite angle stacks the cards.
-      tl.from(el.querySelector('.plan__mini--left'), { rotation: 15, x: 26, duration: 0.8, ease: 'back.out(1.4)' }, t + 0.5);
-      tl.from(el.querySelector('.plan__mini--right'), { rotation: -15, x: -26, duration: 0.8, ease: 'back.out(1.4)' }, t + 0.5);
+      tl.from(el.querySelector('.plan__mini--left'), { rotation: 15, x: 26, duration: 1, ease: 'back.out(1.1)' }, t + 0.5);
+      tl.from(el.querySelector('.plan__mini--right'), { rotation: -15, x: -26, duration: 1, ease: 'back.out(1.1)' }, t + 0.5);
       tl.from(
         [el.querySelector('.plan__name'), ...el.querySelectorAll('.plan__reveal')],
-        { autoAlpha: 0, y: 16, duration: 0.55, stagger: 0.08 },
+        { autoAlpha: 0, y: 12, duration: 0.85, stagger: 0.08 },
         t + 0.6,
       );
     });
@@ -49,7 +50,7 @@ function Content() {
         : 'annualMonthlyEquivalent' in p
           ? p.annualMonthlyEquivalent
           : p.annual.monthlyEquivalent;
-    return c.selectionStatus(label, `${formatNumber(perMonth, { prefix: '$', decimals: 2 })}/month`);
+    return c.selectionStatus(label, `${formatNumber(perMonth, { prefix: '$', decimals: 2 })}${c.perMonth}`);
   })();
 
   return (
@@ -57,7 +58,7 @@ function Content() {
       <div className="slide__rule" />
       <div className="business">
         <header className="intro business__intro">
-          <p className="eyebrow">{c.eyebrow}</p>
+          <SlideEyebrow />
           <h2 className="display">
             {c.title.map((l) => (
               <span key={l}>{l}</span>
