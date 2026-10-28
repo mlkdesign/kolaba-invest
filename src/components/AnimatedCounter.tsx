@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { formatNumber, type NumberFormat } from '../lib/format';
-import { useSection } from '../engine/SectionContext';
+import { useRevealTrigger } from '../hooks/useRevealTrigger';
 import { useEngine } from '../engine/SlideEngine';
 
 type Props = NumberFormat & {
@@ -28,7 +28,8 @@ export function AnimatedCounter({
   className = '',
   ...format
 }: Props) {
-  const { active, revealKey } = useSection();
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const { active, revealKey, flow } = useRevealTrigger(rootRef);
   const { reducedMotion } = useEngine();
   const liveRef = useRef<HTMLSpanElement>(null);
   const state = useRef({ v: value });
@@ -52,9 +53,16 @@ export function AnimatedCounter({
     }
     state.current.v = 0;
     render();
-    tween.current = gsap.to(state.current, { v: value, duration, delay, ease: 'power2.out', onUpdate: render });
+    // On mobile the count starts as the number scrolls in, so long section delays don't apply.
+    tween.current = gsap.to(state.current, {
+      v: value,
+      duration: flow ? Math.min(duration, 1) : duration,
+      delay: flow ? 0.1 : delay,
+      ease: 'power2.out',
+      onUpdate: render,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [revealKey, reducedMotion]);
+  }, [active, revealKey, reducedMotion]);
 
   // Value changes (calculator): animate from wherever the number currently is.
   useEffect(() => {
@@ -76,7 +84,7 @@ export function AnimatedCounter({
 
   const final = formatNumber(value, format);
   return (
-    <span className={`counter ${className}`}>
+    <span className={`counter ${className}`} ref={rootRef}>
       <span className="counter__ghost" aria-hidden="true">
         {final}
       </span>

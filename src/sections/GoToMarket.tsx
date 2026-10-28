@@ -7,7 +7,8 @@ import { useContent } from '../content';
 import { useSection } from '../engine/SectionContext';
 import { MARKETING_ALLOCATION, MARKETING_TOTAL, shareOf } from '../data/budget';
 import { formatNumber, usd } from '../lib/format';
-import { reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
+import { isFlowLayout, reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
+import { useEngine } from '../engine/SlideEngine';
 import './GoToMarket.css';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -16,6 +17,8 @@ function Content() {
   const c = useContent().gtm;
   const [hover, setHover] = useState<{ id: string; anchor: Anchor } | null>(null);
   const { active: sectionActive } = useSection();
+  const { mode } = useEngine();
+  const flow = mode === 'flow';
   useEffect(() => {
     if (!sectionActive) setHover(null);
   }, [sectionActive]);
@@ -25,7 +28,8 @@ function Content() {
     q('.stage').forEach((stage, i) => {
       const t = 0.3 + i * 0.22;
       tl.from(stage.querySelector('.stage__node'), { scale: 0, duration: 0.45, ease: 'back.out(2)' }, t);
-      tl.from(stage.querySelector('.stage__line'), { scaleX: 0, duration: 0.7, ease: 'power2.inOut' }, t + 0.1);
+      // Mobile: the connector runs down to the next stage.
+      tl.from(stage.querySelector('.stage__line'), { [isFlowLayout() ? 'scaleY' : 'scaleX']: 0, duration: 0.7, ease: 'power2.inOut' }, t + 0.1);
       tl.from(stage.querySelector('.stage__arrow'), { autoAlpha: 0, x: -8, y: 8, duration: 0.4 }, t + 0.55);
       reveal(tl, stage.querySelectorAll('.stage__num, .stage__name, .stage__timing, .stage__text'), t + 0.15, { stagger: 0.06 });
     });
@@ -83,7 +87,10 @@ function Content() {
 
         <figure className="budget">
           <figcaption className="sr-only">{c.allocationLabel}</figcaption>
-          <div className={`budget__bar ${hover ? 'has-hover' : ''}`} onPointerLeave={() => setHover(null)}>
+          <div
+            className={`budget__bar ${hover ? 'has-hover' : ''}`}
+            onPointerLeave={(e) => e.pointerType === 'mouse' && setHover(null)}
+          >
             {MARKETING_ALLOCATION.map((m) => (
               <button
                 key={m.id}
@@ -91,10 +98,11 @@ function Content() {
                 className={`budget__segment ${hover?.id === m.id ? 'is-active' : ''}`}
                 style={{ flexGrow: m.amount, background: m.color }}
                 aria-label={`${c.allocation[m.id]}: ${usd(m.amount)}, ${shareOf(m.amount, MARKETING_TOTAL)}%`}
-                onPointerEnter={(e) => enter(m.id, e.currentTarget)}
+                onPointerEnter={(e) => e.pointerType === 'mouse' && enter(m.id, e.currentTarget)}
                 onFocus={(e) => enter(m.id, e.currentTarget)}
                 onBlur={() => setHover(null)}
-                onClick={(e) => (hover?.id === m.id ? setHover(null) : enter(m.id, e.currentTarget))}
+                // Touch: focus already selected the segment, so a tap keeps it selected.
+                onClick={(e) => (flow || hover?.id !== m.id ? enter(m.id, e.currentTarget) : setHover(null))}
               />
             ))}
           </div>
@@ -103,8 +111,9 @@ function Content() {
               <li
                 key={m.id}
                 className={`budget__item ${hover && hover.id !== m.id ? 'is-dim' : ''}`}
-                onPointerEnter={(e) => enter(m.id, e.currentTarget)}
-                onPointerLeave={() => setHover(null)}
+                onPointerEnter={(e) => e.pointerType === 'mouse' && enter(m.id, e.currentTarget)}
+                onPointerLeave={(e) => e.pointerType === 'mouse' && setHover(null)}
+                onClick={(e) => enter(m.id, e.currentTarget)}
               >
                 <span className="budget__value">
                   <AnimatedCounter value={m.amount} prefix="$" delay={1.1 + i * 0.08} />
@@ -113,12 +122,27 @@ function Content() {
               </li>
             ))}
           </ul>
+          {flow && (
+            <p className={`budget__detail ${active ? 'is-on' : ''}`} aria-live="polite">
+              {active ? (
+                <>
+                  <span className="budget__detail-swatch" style={{ background: active.color }} aria-hidden="true" />
+                  <span className="budget__detail-name">{c.allocation[active.id]}</span>
+                  <span className="budget__detail-value">
+                    {usd(active.amount)} · {formatNumber(shareOf(active.amount, MARKETING_TOTAL), { decimals: 1 })}%
+                  </span>
+                </>
+              ) : (
+                <span className="budget__detail-hint">{c.tapHint}</span>
+              )}
+            </p>
+          )}
         </figure>
       </div>
 
       <p className="gtm__note">{c.note}</p>
 
-      <Popover open={!!active} anchor={hover?.anchor ?? null} offset={12} className="chart-tip">
+      <Popover open={!!active && !flow} anchor={hover?.anchor ?? null} offset={12} className="chart-tip">
         {active && (
           <>
             <span className="chart-tip__name">{c.allocation[active.id]}</span>

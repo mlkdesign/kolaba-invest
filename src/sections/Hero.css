@@ -160,32 +160,126 @@
   --badge-rgb: 0, 174, 255;
 }
 
-/* Flow mode: stack narrative, phones, then the amount */
+/* Flow mode (mobile/tablet): headline → description → phones → CTA → status → amount → next */
+html.is-flow .slide-hero .slide__inner {
+  min-height: 100svh;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
+}
 html.is-flow .hero__narrative {
-  margin-top: 12px;
-  width: 100%;
+  display: contents;
+}
+html.is-flow .hero__eyebrow {
+  order: 0;
+  margin-top: 4px;
 }
 html.is-flow .hero__headline {
-  font-size: clamp(40px, 11vw, 64px);
+  order: 1;
+  margin-top: 16px;
+  font-size: clamp(42px, 12.4vw, 64px);
+  line-height: 1.02;
 }
 html.is-flow .hero__promise {
-  font-size: clamp(19px, 5vw, 23px);
+  order: 2;
+  margin-top: 18px;
+  font-size: clamp(18px, 4.9vw, 23px);
 }
 html.is-flow .hero__description {
-  font-size: 17px;
+  order: 3;
+  margin-top: 8px;
+  font-size: clamp(15px, 4.1vw, 17px);
 }
 html.is-flow .hero__phones {
+  order: 4;
   position: relative;
   top: auto;
   right: auto;
-  width: min(100%, 520px);
+  width: min(100%, 460px);
   height: auto;
   aspect-ratio: 630 / 588;
-  margin: 32px auto 8px;
+  margin: 20px auto 8px;
+  align-self: center;
+}
+html.is-flow .hero__actions {
+  order: 5;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+html.is-flow .hero__actions .btn {
+  height: 52px;
+  font-size: 15px;
+}
+html.is-flow .hero__status {
+  order: 6;
+  margin-top: 14px;
+  font-size: 13px;
 }
 html.is-flow .hero__investment {
-  margin: 16px 0 0;
+  order: 7;
+  margin: 28px 0 0;
 }
 html.is-flow .hero__amount {
   font-size: 40px;
+}
+.hero__next {
+  order: 8;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 16px;
+  color: var(--muted-dark);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.hero__next-arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-dark-strong);
+  border-radius: 50%;
+  color: var(--c-white);
+  animation: hero-next 2.4s var(--ease-out) infinite;
+}
+@keyframes hero-next {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+/* Touch devices: no cursor parallax — the phones float gently on their own instead. */
+@media (pointer: coarse) {
+  html.is-flow .hero__phone .hero__px {
+    animation: hero-float 7s ease-in-out infinite;
+  }
+  html.is-flow .hero__phone--creator .hero__px {
+    animation-delay: -3.5s;
+  }
+}
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__next-arrow,
+  html.is-flow .hero__phone .hero__px {
+    animation: none;
+  }
+}
+@media (min-width: 600px) {
+  html.is-flow .hero__actions {
+    flex-direction: row;
+    width: auto;
+  }
 }

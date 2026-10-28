@@ -16,7 +16,8 @@ import './Hero.css';
 
 function HeroContent() {
   const c = useContent().hero;
-  const { goTo } = useEngine();
+  const { goTo, mode } = useEngine();
+  const nextLabel = useContent().slideTitles.problem;
   const { active } = useSection();
   const scene = useRef<HTMLDivElement>(null);
 
@@ -101,6 +102,14 @@ function HeroContent() {
         </span>
         <span className="hero__amount-label">{c.investmentLabel}</span>
       </p>
+      {mode === 'flow' && (
+        <button type="button" className="hero__next" onClick={() => goTo(slideIndex('problem'))}>
+          <span className="hero__next-arrow" aria-hidden="true">
+            ↓
+          </span>
+          {nextLabel}
+        </button>
+      )}
     </div>
   );
 }

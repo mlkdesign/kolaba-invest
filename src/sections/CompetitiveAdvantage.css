@@ -117,6 +117,7 @@ html.is-flow .advantage__num {
 html.is-flow .advantage__title {
   font-size: 20px;
 }
+/* Mobile comparison: compact cards instead of a shrunken table; KOLABA spans the full width. */
 html.is-flow .positioning,
 html.is-flow .positioning tbody,
 html.is-flow .positioning tr,
@@ -129,18 +130,80 @@ html.is-flow .positioning {
   margin-top: 40px;
   font-size: 14px;
 }
+html.is-flow .positioning tbody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
 html.is-flow .positioning__row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   height: auto;
-  padding: 12px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line-dark);
+  border-radius: 18px;
+  background: var(--surface-dark);
+}
+html.is-flow .positioning th {
+  font-weight: 600;
+  font-size: 13px;
+}
+html.is-flow .positioning td {
+  color: var(--muted-dark);
+  font-size: 14px;
 }
 html.is-flow .positioning__row.is-highlight {
-  padding: 12px;
+  grid-column: 1 / -1;
+  padding: 18px;
+  border-color: rgba(255, 0, 166, 0.55);
+  background:
+    linear-gradient(120deg, rgba(255, 0, 166, 0.22), rgba(255, 0, 166, 0) 70%),
+    var(--surface-dark);
 }
 html.is-flow .positioning__row.is-highlight th {
   padding-left: 0;
+  font-size: 15px;
+}
+html.is-flow .positioning__row.is-highlight td {
+  color: var(--c-white);
+  font-size: 16px;
+}
+html.is-flow .advantage__note {
+  margin-top: 24px;
+  font-size: 13px;
 }
 @media (max-width: 520px) {
   html.is-flow .advantage__grid {
     grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+  }
+  /* Number beside the title keeps four reasons compact on phones. */
+  html.is-flow .advantage__item {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 6px;
+    padding-bottom: 22px;
+  }
+  html.is-flow .advantage__rule {
+    grid-column: 1 / -1;
+    margin-bottom: 14px;
+  }
+  html.is-flow .advantage__num {
+    grid-row: span 2;
+    font-size: 28px;
+    line-height: 1;
+  }
+  html.is-flow .advantage__title {
+    font-size: 19px;
+  }
+  html.is-flow .advantage__text {
+    grid-column: 2;
+  }
+}
+@media (hover: none) {
+  .advantage__grid:hover .advantage__item:not(:hover) {
+    opacity: 1;
   }
 }

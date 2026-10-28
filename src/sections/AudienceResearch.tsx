@@ -1,13 +1,18 @@
+import { useState } from 'react';
 import { Slide } from '../components/Slide';
 import { SlideEyebrow } from '../components/SlideEyebrow';
 import { ResearchFunnel, ResearchPanel } from '../components/Research';
 import { useContent } from '../content';
 import { RESEARCH_FUNNEL, RESEARCH_SOURCES } from '../data/research';
 import { reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
+import { useEngine } from '../engine/SlideEngine';
 import './AudienceResearch.css';
 
 function Content() {
   const c = useContent().research;
+  const { mode } = useEngine();
+  const tabs = mode === 'flow';
+  const [tab, setTab] = useState(RESEARCH_SOURCES[0].id);
 
   useSectionTimeline((tl, q) => {
     reveal(tl, q('.research__intro > *, .research__lead'), 0);
@@ -31,9 +36,40 @@ function Content() {
         </header>
         <p className="research__lead">{c.lead}</p>
       </div>
+      {/* Mobile: one source at a time behind Meta Ads / Google tabs. */}
+      {tabs && (
+        <div className="research__tabs" role="tablist" aria-label={c.tabsLabel}>
+          {RESEARCH_SOURCES.map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              role="tab"
+              id={`research-tab-${s.id}`}
+              aria-selected={tab === s.id}
+              aria-controls={`research-panel-${s.id}`}
+              tabIndex={tab === s.id ? 0 : -1}
+              className={`research__tab ${tab === s.id ? 'is-active' : ''}`}
+              onClick={() => setTab(s.id)}
+              onKeyDown={(e) => {
+                if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+                const next = RESEARCH_SOURCES.find((x) => x.id !== s.id)!.id;
+                setTab(next);
+                document.getElementById(`research-tab-${next}`)?.focus();
+              }}
+            >
+              {c.sources[s.id].title}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="research__panels">
-        {RESEARCH_SOURCES.map((s) => (
-          <ResearchPanel key={s.id} source={s} />
+        {RESEARCH_SOURCES.filter((s) => !tabs || s.id === tab).map((s) => (
+          <ResearchPanel
+            key={s.id}
+            source={s}
+            id={tabs ? `research-panel-${s.id}` : undefined}
+            labelledBy={tabs ? `research-tab-${s.id}` : undefined}
+          />
         ))}
       </div>
       <ResearchFunnel stages={RESEARCH_FUNNEL} />

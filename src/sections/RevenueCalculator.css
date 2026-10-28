@@ -317,42 +317,127 @@
   font-size: t(11);
 }
 
+/* Mobile: headline → scenario selector → Gross MRR → results → sliders → preset chart. */
 html.is-flow .calc-section {
   grid-template-columns: minmax(0, 1fr);
-  row-gap: 40px;
+  row-gap: 32px;
   margin-top: 0;
 }
 html.is-flow .calc-section__left {
-  gap: 40px;
+  display: contents;
+}
+html.is-flow .calc-section__intro {
+  order: 0;
+}
+html.is-flow .calc {
+  order: 1;
+  padding: 18px 16px 22px;
+  gap: 18px;
+}
+html.is-flow .scenario-chart {
+  order: 2;
 }
 html.is-flow .scenario-bar__value {
-  font-size: clamp(20px, 5.4vw, 35px);
+  font-size: clamp(20px, 5.6vw, 35px);
 }
 html.is-flow .scenario-bar__meta {
   height: auto;
+  font-size: 12px;
 }
-html.is-flow .calc {
-  padding: 20px 16px;
-}
-html.is-flow .calc__tab {
-  padding: 0 4px 14px;
+html.is-flow .scenario-bar__name {
   font-size: 13px;
 }
-html.is-flow .calc-input__range {
-  height: 28px;
-  margin: -10px 0;
+html.is-flow .calc__tabs {
+  order: 0;
+  gap: 4px;
+  padding: 4px;
+  border: 0;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-html.is-flow .calc-input__range::-webkit-slider-thumb {
-  width: 18px;
-  height: 18px;
+html.is-flow .calc__tabs::-webkit-scrollbar {
+  display: none;
 }
-html.is-flow .calc-input__range::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+html.is-flow .calc__tab {
+  flex: 1 0 auto;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 99px;
+  font-size: 13px;
+  opacity: 0.7;
+  transition:
+    background var(--dur-fast),
+    opacity var(--dur-fast);
+}
+html.is-flow .calc__tab::after {
+  display: none;
+}
+html.is-flow .calc__tab.is-active {
+  background: var(--c-pink);
+  opacity: 1;
+}
+html.is-flow .calc__caption {
+  order: 1;
+  font-size: 12px;
+}
+html.is-flow .calc__mrr {
+  order: 2;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 html.is-flow .calc__mrr-value {
-  font-size: 40px;
+  order: 2;
+  font-size: clamp(44px, 13vw, 60px);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+html.is-flow .calc__mrr-label {
+  order: 1;
+  font-size: 14px;
+  color: var(--muted-dark);
 }
 html.is-flow .calc__results {
+  order: 3;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px 0 4px;
+  border-top: 1px solid var(--line-dark);
+}
+html.is-flow .calc__result-value {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+html.is-flow .calc__result-label {
+  font-size: 13px;
+}
+html.is-flow .calc__divider {
+  order: 4;
+}
+html.is-flow .calc__controls {
+  order: 5;
+  gap: 20px;
+}
+html.is-flow .calc-input__label {
+  font-size: 15px;
+}
+html.is-flow .calc-input__value {
+  min-height: 40px;
+  font-size: 17px;
+}
+/* Large touch area for the native slider; the track itself stays 2px. */
+html.is-flow .calc-input__range {
+  height: 36px;
+  margin: -8px 0 -6px;
+}
+html.is-flow .calc-input__range::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+html.is-flow .calc-input__range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
 }

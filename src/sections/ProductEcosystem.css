@@ -119,17 +119,49 @@ html.is-flow .product__divider {
 }
 html.is-flow .product__side,
 html.is-flow .product__side--business {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 0;
-  align-items: center;
 }
 html.is-flow .product__text {
-  padding-top: 0;
+  display: contents;
 }
 html.is-flow .product__title {
-  font-size: 34px;
+  order: 0;
+  font-size: clamp(34px, 9.6vw, 44px);
 }
 html.is-flow .product__phone {
-  width: clamp(120px, 34vw, 200px);
+  order: 1;
+  align-self: center;
+  width: clamp(200px, 62vw, 270px);
   height: auto;
   aspect-ratio: 199.5 / 368.8;
+  margin: 24px 0 28px;
+}
+html.is-flow .product__lines {
+  order: 2;
+  font-size: clamp(15px, 4.1vw, 17px);
+}
+html.is-flow .product__tag {
+  order: 3;
+  margin-top: 14px;
+}
+html.is-flow .product__shared {
+  order: 4;
+  margin-top: 18px;
+}
+/* Brand link between the two profiles: a short pink line from creator to business. */
+html.is-flow .product__side--business::before {
+  content: '';
+  align-self: center;
+  width: 1px;
+  height: 48px;
+  margin: -24px 0 24px;
+  background: linear-gradient(to bottom, var(--c-pink), var(--c-blue));
+  opacity: 0.8;
+}
+
+html.is-flow .product__lines {
+  opacity: 0.72;
 }

@@ -18,7 +18,8 @@ import {
   type InvestmentCategory,
 } from '../data/budget';
 import { formatNumber, usd } from '../lib/format';
-import { reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
+import { isFlowLayout, reveal, useSectionTimeline } from '../hooks/useSectionTimeline';
+import { useEngine } from '../engine/SlideEngine';
 import './RoadmapInvestment.css';
 
 type SegmentId = InvestmentCategory['id'];
@@ -33,6 +34,39 @@ function Content() {
   const [phase, setPhase] = useState<number | null>(null);
   const leaveTimer = useRef<number>();
   const { active: sectionActive } = useSection();
+  const { mode } = useEngine();
+  const flow = mode === 'flow';
+  const timelineRef = useRef<HTMLOListElement>(null);
+  const [reached, setReached] = useState(0);
+
+  // Mobile: the timeline line fills with scrolling and phases light up as they are reached.
+  useEffect(() => {
+    if (!flow) return;
+    const list = timelineRef.current;
+    const line = list?.querySelector<HTMLElement>('.timeline__line');
+    if (!list || !line) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = list.getBoundingClientRect();
+      const mark = window.innerHeight * 0.65;
+      const p = Math.max(0, Math.min(1, (mark - r.top) / r.height));
+      line.style.setProperty('--fill', String(p));
+      const count = [...list.querySelectorAll<HTMLElement>('.phase')].filter((el) => el.getBoundingClientRect().top + 20 < mark).length;
+      setReached(count);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [flow]);
   useEffect(() => {
     if (sectionActive) return;
     setSegment(null);
@@ -43,7 +77,7 @@ function Content() {
   useSectionTimeline((tl, q) => {
     reveal(tl, q('.roadmap__intro > *'), 0);
     reveal(tl, q('.duration'), 0.2, { stagger: 0.1 });
-    tl.from(q('.timeline__line'), { scaleY: 0, duration: 1.3, ease: 'power2.inOut' }, 0.35);
+    if (!isFlowLayout()) tl.from(q('.timeline__line'), { scaleY: 0, duration: 1.3, ease: 'power2.inOut' }, 0.35);
     q('.phase').forEach((row, i) => {
       const t = 0.45 + i * 0.28;
       tl.from(row.querySelector('.phase__node'), { scale: 0, duration: 0.45, ease: 'back.out(2.2)' }, t);
@@ -99,7 +133,7 @@ function Content() {
     };
     const onDown = (e: PointerEvent) => {
       const t = e.target as Element;
-      if (t.closest('.donut, .legend, .phase-detail, .phase')) return;
+      if (t.closest('.donut, .donut-detail, .legend, .phase-detail, .phase-inline, .phase')) return;
       setPinnedSegment(false);
       setSegment(null);
       setPhase(null);
@@ -140,7 +174,7 @@ function Content() {
             ))}
           </ul>
 
-          <ol className="timeline">
+          <ol className="timeline" ref={timelineRef}>
             <span className="timeline__line" aria-hidden="true" />
             {ROADMAP_PHASES.map((p, i) => {
               const copy = c.phases[p.id as keyof typeof c.phases];
@@ -150,7 +184,7 @@ function Content() {
                   <button
                     type="button"
                     ref={(el) => (phaseRefs.current[i] = el)}
-                    className={`phase ${open ? 'is-open' : ''}`}
+                    className={`phase ${open ? 'is-open' : ''} ${flow && i < reached ? 'is-reached' : ''}`}
                     aria-expanded={open}
                     aria-controls={open ? 'phase-detail' : undefined}
                     aria-label={`${pad(i + 1)} / ${copy.name}, ${p.months}, ${usd(p.budget)} — ${c.phaseDetails}`}
@@ -168,7 +202,17 @@ function Content() {
                       </span>
                     </span>
                     <span className="phase__text">{copy.text}</span>
+                    {flow && (
+                      <span className="phase__toggle" aria-hidden="true">
+                        +
+                      </span>
+                    )}
                   </button>
+                  {flow && open && (
+                    <div className="phase-inline" id="phase-detail">
+                      <p className="phase-inline__headline">{copy.headline}</p>
+                    </div>
+                  )}
                 </li>
               );
             })}
@@ -185,6 +229,24 @@ function Content() {
             label={c.donutLabel}
             caption={c.donutCaption}
           />
+          {flow && (
+            <div className={`donut-detail ${activeCat ? 'is-on' : ''}`} aria-live="polite">
+              {activeCat ? (
+                <>
+                  <p className="donut-detail__head">
+                    <span className="donut-detail__swatch" style={{ background: activeCat.color }} aria-hidden="true" />
+                    {c.categories[activeCat.id].name}
+                  </p>
+                  <p className="donut-detail__value">
+                    {usd(activeCat.amount)} / {formatNumber(shareOf(activeCat.amount, TOTAL_ROUND), { decimals: 1 })}%
+                  </p>
+                  <p className="donut-detail__note">{c.categories[activeCat.id].note}</p>
+                </>
+              ) : (
+                <p className="donut-detail__hint">{c.donutHint}</p>
+              )}
+            </div>
+          )}
           <ul className={`legend ${segment ? 'has-active' : ''}`}>
             {INVESTMENT_CATEGORIES.map((cat, i) => (
               <li key={cat.id}>
@@ -214,7 +276,7 @@ function Content() {
       </div>
 
       <Popover
-        open={!!activeCat}
+        open={!!activeCat && !flow}
         anchor={segment ? segmentAnchor(segment) : null}
         placement={
           !segment
@@ -240,7 +302,7 @@ function Content() {
       </Popover>
 
       <Popover
-        open={!!activePhase}
+        open={!!activePhase && !flow}
         anchor={phase !== null ? () => phaseRefs.current[phase]?.querySelector('.phase__id')?.getBoundingClientRect() ?? null : null}
         placement="right"
         offset={16}

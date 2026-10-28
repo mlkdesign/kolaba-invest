@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { INVESTMENT_CATEGORIES, TOTAL_ROUND, type InvestmentCategory } from '../data/budget';
-import { useSection } from '../engine/SectionContext';
+import { useRevealTrigger } from '../hooks/useRevealTrigger';
 import { useEngine } from '../engine/SlideEngine';
 import { AnimatedCounter } from './AnimatedCounter';
 import productSvg from '../assets/images/donut-product.svg?raw';
@@ -43,7 +43,7 @@ type Props = {
 export function DonutChart({ active, onHover, label, caption, rootRef }: Props) {
   const ring = useRef<HTMLDivElement>(null);
   const [sweeping, setSweeping] = useState(!reducedMotionAtStart());
-  const { active: sectionActive, revealKey } = useSection();
+  const { active: sectionActive, revealKey, flow } = useRevealTrigger(ring);
   const { reducedMotion, mode } = useEngine();
 
   // Clockwise fill: a conic mask sweeps over the exact Figma segment shapes.
@@ -71,7 +71,7 @@ export function DonutChart({ active, onHover, label, caption, rootRef }: Props) 
       {
         '--sweep': '360deg',
         duration: 1.3,
-        delay: 0.45,
+        delay: flow ? 0.1 : 0.45,
         ease: 'power2.inOut',
         onComplete: () => setSweeping(false),
       },

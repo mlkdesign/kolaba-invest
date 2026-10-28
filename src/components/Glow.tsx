@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import glow1 from '../assets/glow/glow-1.svg';
 import glow2 from '../assets/glow/glow-2.svg';
@@ -22,8 +22,19 @@ type Props = {
 export function Glow({ position, sink = 0, className = '' }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const { active } = useSection();
-  const { reducedMotion } = useEngine();
+  const { reducedMotion, mode } = useEngine();
   const tl = useRef<gsap.core.Timeline | null>(null);
+  const flow = mode === 'flow';
+
+  // Mobile: the loop only runs while the glow is actually on screen.
+  const [onScreen, setOnScreen] = useState(false);
+  useEffect(() => {
+    if (!flow || !root.current) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting));
+    io.observe(root.current);
+    return () => io.disconnect();
+  }, [flow]);
+  const running = flow ? onScreen : active;
 
   useEffect(() => {
     if (!root.current || reducedMotion) return;
@@ -38,7 +49,10 @@ export function Glow({ position, sink = 0, className = '' }: Props) {
       ];
       layers.forEach((layer, i) => {
         const c = cfg[i % cfg.length];
-        t.to(layer, { ...c, ease: 'sine.inOut', repeat: -1, yoyo: true }, 0);
+        // Phones: two layers, softer and slower drift (the third stays static).
+        if (flow && i === 2) return;
+        const v = flow ? { ...c, x: c.x * 0.5, y: c.y * 0.5, rotation: 0, duration: c.duration * 1.4 } : c;
+        t.to(layer, { ...v, ease: 'sine.inOut', repeat: -1, yoyo: true }, 0);
       });
       tl.current = t;
     }, root);
@@ -46,13 +60,13 @@ export function Glow({ position, sink = 0, className = '' }: Props) {
       ctx.revert();
       tl.current = null;
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, flow]);
 
   useEffect(() => {
     if (!tl.current) return;
-    if (active) tl.current.play();
+    if (running) tl.current.play();
     else tl.current.pause();
-  }, [active, reducedMotion]);
+  }, [running, reducedMotion, flow]);
 
   return (
     <div

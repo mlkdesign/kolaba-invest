@@ -42,9 +42,33 @@ export function DemoExplanationSlider({ steps, labels, onStepChange }: Props) {
     return () => void tween.kill();
   }, [index, reducedMotion]);
 
+  // Horizontal swipe on touch screens; vertical page scrolling stays native (touch-action: pan-y).
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    swipe.current = e.touches.length === 1 ? { x: t.clientX, y: t.clientY } : null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = swipe.current;
+    swipe.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    go(index + (dx < 0 ? 1 : -1));
+  };
+
   const step = steps[index];
   return (
-    <div className="demo-slider" role="group" aria-roledescription="carousel" aria-label={labels.group}>
+    <div
+      className="demo-slider"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label={labels.group}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="demo-slider__body" ref={body} aria-live="polite">
         <p className="demo-slider__count">
           <span>{pad(index + 1)}</span> <span className="demo-slider__total">/ {pad(steps.length)}</span>

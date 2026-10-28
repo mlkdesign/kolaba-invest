@@ -18,6 +18,11 @@ export const en = {
       roadmap: 'Roadmap',
       founder: 'Founder',
     },
+    financials: 'Financials',
+    demoNav: 'Explore the demo',
+    menuCta: 'Get in touch',
+    menuLabel: 'Menu',
+    currentSection: 'Current section',
     languageLabel: 'Language',
     exploreDemo: 'Explore Demo',
     contact: 'Contact',
@@ -136,6 +141,7 @@ export const en = {
     title: ['Global ambition.', 'Community-first launch.'],
     lead: 'Initial focus: creator and business communities connected to CIS & Eastern Europe, including those living and working internationally.',
     mapLabel: 'Target markets map. Use arrow keys to move between highlighted countries.',
+    mapHint: 'Tap a highlighted country · swipe to explore the map',
     regions: {
       eu: 'European Union',
       cis: 'CIS & Eastern Europe focus',
@@ -157,6 +163,16 @@ export const en = {
     lead: 'Advertising audience research and market validation reveal where relevant creators and businesses can be reached efficiently.',
     pending: 'EVIDENCE PENDING',
     reserved: 'Actual research screenshots reserved',
+    viewer: {
+      open: 'Open full screen',
+      dialog: 'Research screenshot',
+      close: 'Close',
+      zoomIn: 'Zoom in',
+      zoomOut: 'Zoom out',
+      prev: 'Previous screenshot',
+      next: 'Next screenshot',
+    },
+    tabsLabel: 'Research sources',
     sources: {
       meta: {
         title: 'Meta Ads',
@@ -230,6 +246,7 @@ export const en = {
       outreach: 'Business Outreach',
       partnerships: 'Creator Partnerships',
     },
+    tapHint: 'Tap a segment for details',
     allocationLabel: 'Marketing budget allocation',
     note: 'Internal plan • $18,100 total marketing budget includes $9,000 in paid advertising.',
   },
@@ -303,6 +320,7 @@ export const en = {
       contingency: { name: 'Contingency Reserve', note: 'Held back from the operating budget.' },
     },
     donutLabel: 'Investment allocation of the $95,000 initial round',
+    donutHint: 'Tap a segment or a row below to see the details.',
     donutCaption: 'INITIAL ROUND',
     reconciliation: (operating: string, reserve: string, total: string) =>
       `${operating} Planned Operating Budget + ${reserve} Reserve = ${total}`,

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useContent } from '../content';
 import { PRESETS, PRESET_ORDER, type ScenarioId } from '../data/projections';
 import { calculateScenario } from '../lib/revenue';
 import { int, usd } from '../lib/format';
-import { useSection } from '../engine/SectionContext';
+import { useRevealTrigger } from '../hooks/useRevealTrigger';
 import { AnimatedCounter } from './AnimatedCounter';
 
 const PRESET_MRR = Object.fromEntries(PRESET_ORDER.map((id) => [id, calculateScenario(PRESETS[id]).grossMrr])) as Record<
@@ -16,7 +16,8 @@ type Props = { scenario: ScenarioId; customMrr: number };
 /** Gross MRR of the three presets; the user's custom scenario is drawn as a marker line. */
 export function ScenarioChart({ scenario, customMrr }: Props) {
   const c = useContent().calculator;
-  const { active } = useSection();
+  const figureRef = useRef<HTMLElement>(null);
+  const { active } = useRevealTrigger(figureRef);
   const [grown, setGrown] = useState(false);
 
   // Bars grow in after the slide activates (CSS transition) and reset when it leaves.
@@ -34,7 +35,7 @@ export function ScenarioChart({ scenario, customMrr }: Props) {
   const g = grown ? 1 : 0;
 
   return (
-    <figure className={`scenario-chart ${grown ? 'is-grown' : ''}`} aria-label={c.chartLabel}>
+    <figure ref={figureRef} className={`scenario-chart ${grown ? 'is-grown' : ''}`} aria-label={c.chartLabel}>
       <div className="scenario-chart__bars">
         {PRESET_ORDER.map((id) => {
           const p = PRESETS[id];

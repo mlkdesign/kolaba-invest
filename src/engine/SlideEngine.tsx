@@ -47,7 +47,7 @@ const EASE_RETARGET = 'power3.out';
 function isKeyboardOwner(el: EventTarget | null) {
   if (!(el instanceof HTMLElement)) return false;
   if (el.isContentEditable) return true;
-  if (el.closest('input, textarea, select, [role="slider"], [role="listbox"], [role="radiogroup"], [role="tablist"], [role="application"], [data-keys-owned]')) return true;
+  if (el.closest('input, textarea, select, [role="slider"], [role="listbox"], [role="radiogroup"], [role="tablist"], [role="application"], [data-keys-owned], [aria-modal="true"]')) return true;
   return false;
 }
 

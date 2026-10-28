@@ -43,6 +43,6 @@
 html.is-flow {
   --u: clamp(0.72px, calc(100vw / 600), 1px);
   --t-floor: 0.95px;
-  --gutter: clamp(16px, 5vw, 40px);
+  --gutter: clamp(16px, 5.4vw, 40px);
   --header-h: 60px;
 }

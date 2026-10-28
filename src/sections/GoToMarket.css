@@ -189,9 +189,56 @@ html.is-flow .gtm__head {
   align-items: flex-start;
   margin-top: 0;
 }
+/* Mobile: vertical timeline — node and connector on the left, stage content on the right. */
 html.is-flow .gtm__stages {
   grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   margin-top: 40px;
+}
+html.is-flow .stage {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  column-gap: 16px;
+  row-gap: 4px;
+  padding-bottom: 28px;
+}
+html.is-flow .stage:last-child {
+  padding-bottom: 0;
+}
+html.is-flow .stage__connector {
+  grid-row: 1 / span 4;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: -28px;
+  padding-top: 14px;
+}
+html.is-flow .stage:last-child .stage__connector {
+  margin-bottom: 0;
+}
+html.is-flow .stage__line {
+  flex: 1;
+  width: 1px;
+  height: auto;
+  transform-origin: center top;
+}
+html.is-flow .stage:last-child .stage__line,
+html.is-flow .stage__arrow {
+  display: none;
+}
+html.is-flow .stage > :not(.stage__connector) {
+  grid-column: 2;
+}
+html.is-flow .stage__num {
+  font-size: 28px;
+}
+html.is-flow .stage__name {
+  font-size: 18px;
+}
+html.is-flow .stage__timing {
+  font-size: 14px;
+}
+html.is-flow .stage__text {
+  font-size: 15px;
 }
 html.is-flow .gtm__rule {
   margin-top: 40px;
@@ -204,8 +251,60 @@ html.is-flow .gtm__total {
   font-size: 40px;
 }
 html.is-flow .budget__bar {
-  height: 24px;
+  height: 32px;
+}
+html.is-flow .budget__segment {
+  border-radius: 10px;
 }
 html.is-flow .budget__legend {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+html.is-flow .budget__item {
+  cursor: pointer;
+}
+html.is-flow .budget__value {
+  font-size: 20px;
+}
+html.is-flow .budget__label {
+  font-size: 13px;
+}
+.budget__detail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  min-height: 52px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-light);
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.35;
+  transition: border-color var(--dur-fast);
+}
+.budget__detail.is-on {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+.budget__detail-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.budget__detail-name {
+  font-weight: 600;
+}
+.budget__detail-value {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+.budget__detail-hint {
+  color: var(--muted-light);
+}
+html.is-flow .budget__segment {
+  position: relative;
+}
+html.is-flow .budget__segment::after {
+  content: '';
+  position: absolute;
+  inset: -8px -1px;
 }

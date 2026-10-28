@@ -329,10 +329,54 @@
   color: var(--c-white);
 }
 
-html.is-flow .founder {
-  grid-template-columns: minmax(0, 1fr);
-  row-gap: 56px;
-  margin-top: 0;
+/* Mobile: founder → social links → contact form → legal footer. */
+html.is-flow .founder,
+html.is-flow .site-footer {
+  display: contents;
+}
+html.is-flow .founder__left {
+  order: 0;
+}
+html.is-flow .site-footer__links {
+  order: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 32px;
+}
+html.is-flow .contact {
+  order: 2;
+  margin-top: 64px;
+}
+html.is-flow .site-footer__legal {
+  order: 3;
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-dark);
+  font-size: 13px;
+  white-space: normal;
+}
+html.is-flow .site-footer__legal a {
+  display: inline-block;
+  padding: 10px 0;
+}
+html.is-flow .pill-link,
+html.is-flow .text-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--line-dark-strong);
+  border-radius: 99px;
+  opacity: 1;
+  font-size: 14px;
+  white-space: nowrap;
+}
+html.is-flow .text-link {
+  justify-content: space-between;
 }
 html.is-flow .founder__profile {
   flex-direction: column;
@@ -341,24 +385,72 @@ html.is-flow .founder__profile {
 }
 html.is-flow .founder__photo {
   --u: 1px;
+  width: min(100%, 300px);
+  height: auto;
+  aspect-ratio: 220 / 306;
+}
+html.is-flow .founder__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 html.is-flow .founder__bio {
   width: auto;
   padding-top: 0;
 }
+html.is-flow .founder__name {
+  font-size: 30px;
+}
+html.is-flow .founder__p {
+  font-size: 16px;
+}
 html.is-flow .contact__title {
-  font-size: 32px;
+  font-size: clamp(32px, 9vw, 44px);
+}
+html.is-flow .contact__lead {
+  font-size: 16px;
+}
+html.is-flow .field__label {
+  font-size: 14px;
+}
+html.is-flow .field input {
+  height: 54px;
+  padding: 0 18px;
+  font-size: 16px;
+}
+html.is-flow .field textarea {
+  height: 148px;
+  padding: 16px 18px;
+  font-size: 16px;
+}
+html.is-flow .field__error {
+  font-size: 13px;
+}
+html.is-flow .contact-form .btn {
+  width: 100%;
+  height: 52px;
 }
 @media (max-width: 520px) {
   html.is-flow .contact-form__row {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-html.is-flow .site-footer {
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 56px;
+html.is-flow .contact__lead {
+  margin-bottom: 24px;
 }
-html.is-flow .site-footer__legal {
-  white-space: normal;
+html.is-flow .consent {
+  min-height: 44px;
+  gap: 12px;
+  font-size: 13px;
+}
+html.is-flow .consent__box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+}
+html.is-flow .telegram-btn {
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  font-size: 15px;
 }

@@ -7,6 +7,7 @@ import { MAP_EXCLUDED, MARKET_COUNTRIES, type RegionId } from '../data/market';
 import { Popover, type Anchor } from './Popover';
 import { useContent } from '../content';
 import { useSection } from '../engine/SectionContext';
+import { useEngine } from '../engine/SlideEngine';
 
 const W = 800;
 const H = 420;
@@ -75,6 +76,8 @@ type Active = { kind: 'country'; id: string } | null;
 /** Market countries are highlighted; hovering, tapping or focusing one shows its region. */
 export function InteractiveMap() {
   const c = useContent().markets;
+  const { mode } = useEngine();
+  const flow = mode === 'flow';
   const wrap = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<MapData | null>(null);
   const [active, setActive] = useState<Active>(null);
@@ -157,11 +160,10 @@ export function InteractiveMap() {
   const activeCountry = active?.kind === 'country' ? data?.countries.find((x) => x.id === active.id) : undefined;
 
   return (
-    <div
-      ref={wrap}
-      className={`map ${active ? 'has-active' : ''} ${data ? 'is-loaded' : ''}`}
-      data-keys-owned=""
-    >
+    <div className="map-wrap" ref={wrap} data-keys-owned="">
+      {/* Phones: the map keeps a readable height and pans sideways (native scroll, no gesture conflicts). */}
+      <div className="map-scroll" data-native-scroll="">
+    <div className={`map ${active ? 'has-active' : ''} ${data ? 'is-loaded' : ''}`}>
       <svg className="map__svg" viewBox={`0 0 ${W} ${H}`} role="group" aria-label={c.mapLabel}>
         {data && (
           <>
@@ -215,8 +217,24 @@ export function InteractiveMap() {
           </>
         )}
       </svg>
+    </div>
+      </div>
 
-      <Popover open={!!activeCountry} anchor={anchor} offset={16} className="map-tip">
+      {flow && (
+        <p className={`map-detail ${activeCountry ? 'is-on' : ''}`} aria-live="polite">
+          {activeCountry ? (
+            <>
+              <span className="map-detail__dot" aria-hidden="true" />
+              <span className="map-detail__name">{activeCountry.name}</span>
+              <span className="map-detail__region">{c.regions[activeCountry.region]}</span>
+            </>
+          ) : (
+            <span className="map-detail__hint">{c.mapHint}</span>
+          )}
+        </p>
+      )}
+
+      <Popover open={!!activeCountry && !flow} anchor={anchor} offset={16} className="map-tip">
         {activeCountry && (
           <>
             <span className="map-tip__name">{activeCountry.name}</span>
