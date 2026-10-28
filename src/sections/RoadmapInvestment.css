@@ -1,0 +1,366 @@
+.roadmap {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 790fr) minmax(0, 453fr);
+  column-gap: u(53);
+  margin-top: u(43);
+}
+.roadmap__left,
+.roadmap__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.roadmap__durations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: u(30);
+  margin-top: u(48);
+  line-height: 1.4;
+}
+.duration {
+  display: flex;
+  align-items: center;
+  gap: u(12);
+}
+.duration__value {
+  font-weight: 500;
+  font-size: u(35);
+}
+.duration__label {
+  font-size: t(13);
+}
+
+.timeline {
+  position: relative;
+  margin-top: u(43);
+}
+.timeline__line {
+  position: absolute;
+  left: u(15);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.149);
+  transform-origin: top center;
+}
+.phase {
+  display: flex;
+  align-items: center;
+  gap: u(18);
+  width: 100%;
+  height: u(67);
+  border-radius: 12px;
+  text-align: left;
+  transition: background var(--dur-fast);
+}
+.phase:hover,
+.phase.is-open {
+  background: rgba(0, 0, 0, 0.035);
+}
+.phase__marker {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: u(30);
+  height: 100%;
+}
+.phase__node {
+  width: u(7);
+  height: u(7);
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+  background: var(--c-pink);
+  transition: box-shadow 300ms var(--ease-out);
+}
+.phase:hover .phase__node,
+.phase.is-open .phase__node {
+  box-shadow: 0 0 0 5px rgba(255, 0, 166, 0.18);
+}
+.phase__id {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: u(5);
+  width: u(187);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.phase__name {
+  font-weight: 700;
+  font-size: t(13);
+}
+.phase__meta {
+  color: var(--muted-light);
+  font-size: t(12);
+}
+.phase__text {
+  width: u(525);
+  font-size: t(13);
+  line-height: 1.4;
+}
+.roadmap__team {
+  margin-top: auto;
+  font-size: t(13);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* Donut */
+.donut {
+  position: relative;
+  width: u(210);
+  height: u(210);
+  margin: u(107) 0 0 u(101);
+}
+.donut__ring {
+  --sweep: 360deg;
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: conic-gradient(from 0deg, #000 var(--sweep), transparent var(--sweep));
+  mask-image: conic-gradient(from 0deg, #000 var(--sweep), transparent var(--sweep));
+}
+.donut__segment {
+  position: absolute;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-fast),
+    transform 300ms var(--ease-out),
+    filter var(--dur-fast);
+}
+.donut__segment svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.donut__segment path {
+  pointer-events: visiblePainted;
+  cursor: pointer;
+}
+.donut__ring.has-active .donut__segment:not(.is-active) {
+  opacity: 0.35;
+}
+.donut__segment.is-active {
+  transform: translate(calc(var(--dx) * u(5)), calc(var(--dy) * u(5)));
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+}
+.donut__total,
+.donut__caption {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
+.donut__total {
+  top: u(76);
+  font-weight: 600;
+  font-size: u(35);
+}
+.donut__caption {
+  top: u(130);
+  font-size: t(11);
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: u(4);
+  margin-top: u(101);
+}
+.legend__row {
+  display: flex;
+  align-items: center;
+  gap: u(10);
+  width: 100%;
+  padding: u(2.5) 0;
+  border-radius: 6px;
+  font-size: t(12);
+  line-height: 1.4;
+  text-align: left;
+  transition: opacity var(--dur-fast), background var(--dur-fast);
+}
+.legend.has-active .legend__row:not(.is-active) {
+  opacity: 0.45;
+}
+.legend__swatch {
+  flex: none;
+  width: u(7);
+  height: u(7);
+  min-width: 6px;
+  min-height: 6px;
+}
+.legend__name {
+  width: u(260);
+}
+.legend__amount {
+  width: u(75);
+  font-weight: 600;
+}
+.legend__share {
+  font-size: t(11);
+}
+.roadmap__recon {
+  margin-top: u(31);
+  font-weight: 600;
+  font-size: t(14);
+  line-height: 1.4;
+}
+.roadmap__statement {
+  margin-top: auto;
+  padding-top: u(16);
+  font-weight: 600;
+  font-size: t(13);
+  line-height: 1.4;
+}
+#roadmap .progress {
+  margin-top: u(55);
+}
+
+/* Segment popup — KOLABA glass badge, tinted per segment */
+.segment-tip {
+  --tip-rgb: 0, 0, 0;
+  --tip-color: #3a3a3a;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 240px;
+  padding: 9px 12px;
+  border: 1px solid var(--tip-color);
+  border-radius: 16px;
+  background:
+    linear-gradient(115deg, rgba(var(--tip-rgb), 0.45) 0%, rgba(var(--tip-rgb), 0) 100%),
+    rgba(11, 11, 11, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--c-white);
+  pointer-events: none !important;
+}
+.segment-tip--marketing {
+  --tip-rgb: 255, 0, 166;
+  --tip-color: var(--c-pink);
+}
+.segment-tip--contingency {
+  --tip-rgb: 144, 0, 255;
+  --tip-color: var(--c-purple);
+}
+.segment-tip--infrastructure {
+  --tip-rgb: 120, 120, 120;
+  --tip-color: rgba(255, 255, 255, 0.35);
+}
+.segment-tip--product {
+  --tip-rgb: 90, 90, 90;
+  --tip-color: rgba(255, 255, 255, 0.5);
+}
+.segment-tip__name {
+  font-size: 11px;
+  opacity: 0.8;
+}
+.segment-tip__value {
+  font-weight: 700;
+  font-size: 15px;
+}
+.segment-tip__note {
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+/* Phase detail (Figma "Roadmap / Selected Detail") */
+.phase-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(420px, calc(100vw - 20px));
+  padding: 20px 22px;
+  border: 1px solid var(--line-dark);
+  border-radius: 20px;
+  background: rgba(11, 11, 11, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--c-white);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+.phase-detail__tag {
+  color: var(--c-pink);
+  font-size: 12px;
+}
+.phase-detail__headline {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.3;
+}
+.phase-detail__text {
+  font-size: 14px;
+  line-height: 1.45;
+}
+.phase-detail__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.phase-detail__close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  border-radius: 50%;
+  font-size: 20px;
+  opacity: 0.7;
+}
+.phase-detail__close:hover {
+  opacity: 1;
+  background: var(--surface-dark);
+}
+
+html.is-flow .roadmap {
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 48px;
+  margin-top: 0;
+}
+html.is-flow .roadmap__durations {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-top: 32px;
+}
+html.is-flow .timeline {
+  margin-top: 28px;
+}
+html.is-flow .phase {
+  height: auto;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+html.is-flow .phase__marker {
+  height: 20px;
+}
+html.is-flow .phase__text {
+  width: auto;
+  flex-basis: calc(100% - 48px);
+  margin-left: 48px;
+  margin-top: -8px;
+}
+html.is-flow .roadmap__team {
+  margin-top: 24px;
+}
+html.is-flow .donut {
+  --u: 1.2px;
+  margin: 0 auto;
+}
+html.is-flow .legend {
+  margin-top: 40px;
+}
+html.is-flow .legend__name {
+  flex: 1;
+  width: auto;
+}
+html.is-flow .roadmap__statement {
+  margin-top: 16px;
+}

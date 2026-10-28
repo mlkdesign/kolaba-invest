@@ -1,0 +1,35 @@
+.legal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  min-height: 100svh;
+  max-width: 720px;
+  padding: 48px clamp(20px, 6vw, 72px);
+}
+.legal__logo {
+  margin-bottom: 48px;
+}
+.legal__title {
+  font-weight: 700;
+  font-size: clamp(32px, 6vw, 48px);
+  line-height: 1.06;
+}
+.legal__status {
+  padding: 6px 12px;
+  border: 1px solid var(--c-pink);
+  border-radius: 99px;
+  color: var(--c-pink);
+  font-size: 13px;
+}
+.legal__detail {
+  color: var(--muted-dark);
+  font-size: 15px;
+}
+.legal__detail a {
+  color: var(--c-white);
+  text-decoration: underline;
+}
+.legal__back {
+  margin-top: 16px;
+}

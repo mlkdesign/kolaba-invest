@@ -1,0 +1,165 @@
+.demo {
+  display: grid;
+  grid-template-columns: minmax(0, 346fr) u(312) minmax(0, 638fr);
+  flex: 1 1 auto;
+  min-height: u(641);
+  margin-top: u(43);
+}
+.demo__left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: u(4);
+}
+.demo__description {
+  width: u(355);
+  max-width: 100%;
+  font-size: u(18);
+  line-height: 1.4;
+}
+.demo__phone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.demo-phone {
+  position: relative;
+  width: u(312);
+  height: u(637.4);
+}
+.demo-phone__frame {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.55));
+}
+/* Screen area of the iPhone frame — reserved for the live prototype */
+.demo-phone__screen {
+  position: absolute;
+  left: calc(14.09 / 312 * 100%);
+  top: calc(15.5 / 637.4 * 100%);
+  width: calc(283.14 / 312 * 100%);
+  height: calc(612.07 / 637.4 * 100%);
+  border-radius: calc(42.26 / 312 * 100%) / calc(42.26 / 637.4 * 100%);
+  overflow: hidden;
+  pointer-events: none;
+}
+.demo-phone__screen:not(:empty) {
+  pointer-events: auto;
+}
+.demo-phone__screen > iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.demo__right {
+  display: flex;
+  flex-direction: column;
+  padding-left: u(105);
+}
+.demo-slider {
+  display: flex;
+  flex-direction: column;
+  gap: u(30);
+  width: u(450);
+  max-width: 100%;
+  margin-top: u(161);
+}
+.demo-slider__body {
+  display: flex;
+  flex-direction: column;
+  gap: u(30);
+  min-height: u(170);
+}
+.demo-slider__count {
+  font-weight: 500;
+  font-size: u(18);
+  line-height: 1.4;
+}
+.demo-slider__total {
+  color: rgba(255, 255, 255, 0.3);
+}
+.demo-slider__title {
+  font-weight: 600;
+  font-size: u(40);
+  line-height: 1.1;
+}
+.demo-slider__text {
+  font-size: u(17);
+  line-height: 1.4;
+}
+.demo-slider__progress {
+  display: flex;
+  gap: u(6);
+}
+.demo-slider__step {
+  position: relative;
+  width: u(66);
+  height: 2px;
+  background: var(--line-dark);
+  transition: background 300ms var(--ease-out);
+}
+/* larger hit area without changing the 2px bar */
+.demo-slider__step::before {
+  content: '';
+  position: absolute;
+  inset: -10px 0;
+}
+.demo-slider__step.is-active {
+  background: var(--c-pink);
+}
+.demo-slider__step:hover:not(.is-active) {
+  background: rgba(255, 255, 255, 0.35);
+}
+.demo-slider__controls {
+  display: flex;
+  gap: u(12);
+}
+.demo-slider__btn {
+  width: u(130);
+  min-width: 110px;
+  font-size: t(12);
+}
+.demo-slider__btn:disabled {
+  opacity: 0.2;
+}
+.demo__disclaimer {
+  margin-top: auto;
+  color: var(--muted-dark);
+  font-size: t(13);
+  line-height: 1.4;
+}
+#demo .progress {
+  margin-top: u(73);
+}
+
+html.is-flow .demo {
+  grid-template-columns: minmax(0, 1fr);
+  height: auto;
+  row-gap: 36px;
+  margin-top: 0;
+}
+html.is-flow .demo__left {
+  gap: 20px;
+}
+html.is-flow .demo__phone {
+  order: 3;
+}
+html.is-flow .demo-phone {
+  width: min(72vw, 312px);
+  height: auto;
+  aspect-ratio: 312 / 637.4;
+}
+html.is-flow .demo__right {
+  padding-left: 0;
+  gap: 24px;
+}
+html.is-flow .demo-slider {
+  margin-top: 0;
+}
+html.is-flow .demo-slider__body {
+  min-height: 190px;
+}
+html.is-flow .demo-slider__title {
+  font-size: 32px;
+}

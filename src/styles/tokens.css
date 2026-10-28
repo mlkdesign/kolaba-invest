@@ -1,0 +1,48 @@
+/* Design tokens — values taken from the Figma frames (1440 × 870). */
+:root {
+  --c-bg-dark: #0b0b0b;
+  --c-bg-light: #ecedef;
+  --c-white: #ffffff;
+  --c-black: #000000;
+  --c-soft: #ecedef;
+  --c-pink: #ff00a6;
+  --c-pink-logo: #ff0077;
+  --c-blue: #08a9f5;
+  --c-blue-badge: #00aeff;
+  --c-purple: #9000ff;
+  --c-error: #ff00a6;
+
+  --line-dark: rgba(255, 255, 255, 0.1);
+  --line-dark-strong: rgba(255, 255, 255, 0.3);
+  --line-light: rgba(0, 0, 0, 0.15);
+  --muted-dark: rgba(255, 255, 255, 0.5);
+  --muted-light: rgba(0, 0, 0, 0.6);
+  --surface-dark: rgba(255, 255, 255, 0.05);
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-accent: 'Montserrat', var(--font-sans);
+
+  --radius-pill: 99px;
+  --radius-card: 24px;
+  --radius-field: 20px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 220ms;
+
+  /* Fluid design unit: 1 Figma px at 1440 × 870, scaled by the tighter viewport axis. */
+  --u: clamp(0.6px, min(calc(100vw / 1440), calc(100dvh / 870)), 1.5px);
+  /* Width-only unit for horizontal gutters. */
+  --ux: clamp(0.6px, calc(100vw / 1440), 1.5px);
+  /* Small text never shrinks below 92% of its design size. */
+  --t-floor: 0.92px;
+  --gutter: calc(72 * var(--ux));
+  --header-h: calc(72 * var(--u));
+}
+
+/* Flow (tablet portrait / mobile): natural scrolling, stacked layouts. */
+html.is-flow {
+  --u: clamp(0.72px, calc(100vw / 600), 1px);
+  --t-floor: 0.95px;
+  --gutter: clamp(16px, 5vw, 40px);
+  --header-h: 60px;
+}

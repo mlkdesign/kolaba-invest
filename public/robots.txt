@@ -1,0 +1,3 @@
+# Private investor presentation. Note: robots rules do not restrict access; use hosting-level auth.
+User-agent: *
+Disallow: /

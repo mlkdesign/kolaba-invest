@@ -1,0 +1,190 @@
+.hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.hero__narrative {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: u(24);
+  width: u(560);
+  max-width: 100%;
+  /* Figma: block centred at 50% − 22px of the 870 frame */
+  margin-top: u(200);
+}
+
+.hero__headline {
+  font-weight: 700;
+  font-size: u(64);
+  line-height: 1.06;
+}
+.hero__line {
+  display: block;
+  overflow: hidden;
+  /* keep descenders / periods inside the reveal mask */
+  padding-bottom: 0.04em;
+  margin-bottom: -0.04em;
+}
+.hero__word {
+  display: inline-block;
+}
+
+.hero__promise {
+  font-weight: 500;
+  font-size: u(23);
+  line-height: 1.4;
+}
+.hero__description {
+  width: u(440);
+  max-width: 100%;
+  color: var(--c-soft);
+  font-size: u(18);
+  line-height: 1.4;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: u(12);
+}
+.hero__status {
+  color: var(--muted-dark);
+  font-size: t(12);
+  line-height: 1.4;
+}
+
+.hero__investment {
+  display: flex;
+  align-items: center;
+  gap: u(15);
+  margin-top: auto;
+  margin-bottom: u(24);
+}
+.hero__amount {
+  font-weight: 700;
+  font-size: u(48);
+  line-height: 1.1;
+}
+.hero__amount-label {
+  font-size: t(13);
+  line-height: 1.4;
+}
+
+/* Phone composition — percentages of the 630 × 588 Figma group */
+.hero__phones {
+  position: absolute;
+  top: u(111);
+  right: calc(65 * var(--ux));
+  width: u(630);
+  height: u(588);
+  container-type: inline-size;
+}
+.hero__phone,
+.hero__badge {
+  position: absolute;
+}
+.hero__px {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+.hero__phone img {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45));
+}
+.hero__phone--business {
+  left: calc(75 / 630 * 100%);
+  top: calc(105.43 / 588 * 100%);
+  width: calc(368.02 / 630 * 100%);
+  height: calc(506.6 / 588 * 100%);
+}
+.hero__phone--creator {
+  left: calc(335.06 / 630 * 100%);
+  top: calc(68.25 / 588 * 100%);
+  width: calc(306.03 / 630 * 100%);
+  height: calc(491.42 / 588 * 100%);
+}
+.hero__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero__badge--business {
+  left: calc(148.98 / 630 * 100%);
+  top: calc(24 / 588 * 100%);
+  width: calc(136.55 / 630 * 100%);
+  height: calc(35.55 / 588 * 100%);
+  z-index: 2;
+}
+.hero__badge--creator {
+  left: calc(342.98 / 630 * 100%);
+  top: calc(57 / 588 * 100%);
+  width: calc(133.96 / 630 * 100%);
+  height: calc(39.45 / 588 * 100%);
+  z-index: 2;
+}
+.hero__badge .hero__px {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero__badge .glass-badge {
+  font-size: calc(12 / 630 * 100cqw);
+  padding: calc(4 / 630 * 100cqw) calc(10 / 630 * 100cqw);
+  border-radius: calc(16 / 630 * 100cqw);
+  transition:
+    transform 260ms var(--ease-out),
+    box-shadow 260ms var(--ease-out);
+}
+.hero__badge--business .glass-badge {
+  transform: rotate(4.52deg);
+}
+.hero__badge--creator .glass-badge {
+  transform: rotate(-6.35deg);
+}
+.hero__badge--business .glass-badge:hover {
+  transform: rotate(4.52deg) scale(1.06);
+  box-shadow: 0 0 24px rgba(0, 174, 255, 0.45);
+}
+.hero__badge--creator .glass-badge:hover {
+  transform: rotate(-6.35deg) scale(1.06);
+  box-shadow: 0 0 24px rgba(255, 0, 166, 0.45);
+}
+.glass-badge--blue {
+  --badge-color: var(--c-blue-badge);
+  --badge-rgb: 0, 174, 255;
+}
+
+/* Flow mode: stack narrative, phones, then the amount */
+html.is-flow .hero__narrative {
+  margin-top: 12px;
+  width: 100%;
+}
+html.is-flow .hero__headline {
+  font-size: clamp(40px, 11vw, 64px);
+}
+html.is-flow .hero__promise {
+  font-size: clamp(19px, 5vw, 23px);
+}
+html.is-flow .hero__description {
+  font-size: 17px;
+}
+html.is-flow .hero__phones {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: min(100%, 520px);
+  height: auto;
+  aspect-ratio: 630 / 588;
+  margin: 32px auto 8px;
+}
+html.is-flow .hero__investment {
+  margin: 16px 0 0;
+}
+html.is-flow .hero__amount {
+  font-size: 40px;
+}
